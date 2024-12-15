@@ -1,132 +1,39 @@
 .header {
-    position: fixed;
+    display: flex;
+    height: 65px;
     width: 100%;
-    top: 0;
-    left: 0;
-    background-color: transparent;
-    z-index: var(--z-fixed);
+    background-color: var(--col-nav);
+    box-shadow: 0 5px 10px var(--col-shadow);
+    align-items: center;
 }
 
-.navbar {
+.brand {
     display: flex;
+    margin-left: 65px;
+    height: 100%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    color: #e41e4f;
+    font-size: 30px;
     align-items: center;
-    justify-content: space-between;
-    position: relative;
-    height: var(--header-height);
-    margin: 1rem;
+    text-decoration: none;
+}
+
+.brand:hover {
+    background-color: var(--col-nav-hover);
+    text-decoration: underline;
 }
 
 .logo {
-    color: var(--first-color);
-    transition: color 0.4s;
-    font-size: var(--h2-font-size);
-    font-family: var(--second-font);
-    text-decoration: none;
-}
+    margin-right: 10px;
+    width: 1em;
+    height: 1em;
 
-.toggle,
-.close {
-    font-size: 1.5rem;
-    color: var(--title-color);
-    cursor: pointer;
-}
+    font-size: 40px;
 
-@media screen and (max-width: 1150px) {
-    .menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        background-color: hsla(0, 0%, 6%, 0.2);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        width: 80%;
-        height: 100%;
-        padding: 6rem 3rem 0;
-        transition: right 0.4s;
-    }
-}
-
-@media screen and (max-width: 300px) {
-    .menu {
-        padding: 4rem 1rem 2rem;
-    }
-
-    .list {
-        row-gap: 1rem;
-    }
-
-    .link,
-    .cta {
-        font-size: var(--smaller-font-size);
-    }
-
-    .cta {
-        padding: 8px 16px;
-        font-size: 12px;
-        margin-top: 1rem;
-        width: auto;
-        white-space: nowrap;
-    }
-}
-
-.list {
-    display: flex;
-    flex-direction: column;
-    row-gap: 2.5rem;
-    list-style: none;
-}
-
-.link {
-    color: var(--title-color);
-    font-weight: var(--font-semi-bold);
-    text-decoration: none;
-}
-
-.link:hover {
-    color: var(--first-color);
-}
-
-.close {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-}
-
-.show-menu {
-    right: 0;
-}
-
-.list {
-    display: flex;
-    flex-direction: row;
-    column-gap: 2.5rem;
-}
-
-.menu_mobile {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    background-color: hsla(0, 0%, 6%, 0.2);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    width: 80%;
-    height: 100%;
-    padding: 6rem 3rem 0;
-    transition: right 0.4s;
-}
-
-@media screen and (min-width: 1150px) {
-    .navbar {
-        height: calc(var(--header-height) + 1rem);
-    }
-
-    .toggle,
-    .close {
-        display: none;
-    }
-
-    .list {
-        flex-direction: row;
-        column-gap: 2.5rem;
-    }
+    /*
+    Calculate filter by inputting desired colour on https://codepen.io/sosuke/pen/Pjoqqp.
+    Current colour is #e41e4f.
+    */
+    filter: invert(22%) sepia(72%) saturate(6615%) hue-rotate(336deg) brightness(94%) contrast(89%);
 }

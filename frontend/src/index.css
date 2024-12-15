@@ -12,14 +12,9 @@
   -moz-osx-font-smoothing: grayscale;
 
   --col-background: #1e1e1e;
-  --col-scrollbar: #1e1e1e;
-  --col-scrollbar-thumb: #272727;
   --col-nav: #313131;
+  --col-nav-hover: #383838;
   --col-shadow: #131313;
-  --col-text: #ffffff;
-  --col-text-muted: #d3d3d3;
-  --col-link: #03bfd6;
-  --col-link-hover: #038ed6;
 }
 
 * {
