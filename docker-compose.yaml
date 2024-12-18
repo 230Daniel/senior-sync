@@ -12,8 +12,8 @@ services:
         build:
             context: './frontend'
             dockerfile: 'Dockerfile'
-        # volumes:
-        #     - '/etc/letsencrypt/live/example.com:/ssl:ro'
+        volumes:
+            - '/etc/letsencrypt/live/changeme.example.com:/ssl:ro'
         ports:
             - '443:443'
             - '80:80'
