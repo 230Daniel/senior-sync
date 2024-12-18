@@ -18,6 +18,6 @@ services:
             SSL_CERTIFICATE_PATH: '/etc/letsencrypt/live/pi.utili.xyz/fullchain.pem'
             SSL_CERTIFICATE_KEY_PATH: '/etc/letsencrypt/live/pi.utili.xyz/privkey.pem'
         ports:
-            # - '443:443'
+            - '443:443'
             - '80:80'
         restart: unless-stopped
