@@ -11,10 +11,20 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  --col-primary: #e41e4f;
+
+  --col-status-green: #49af5f;
+  --col-status-amber: #ac8300;
+  --col-status-red: #e41e4f;
+
   --col-background: #1e1e1e;
+
   --col-nav: #313131;
   --col-nav-hover: #383838;
   --col-shadow: #131313;
+
+  --col-card: #272727;
+  --col-card-title: #353535;
 }
 
 * {
