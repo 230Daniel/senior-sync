@@ -2,7 +2,7 @@ FROM node:22.12 AS build-frontend
 
 WORKDIR /tmp
 
-COPY package.json ./
+COPY package-lock.json package.json ./
 RUN npm ci
 
 COPY . ./
