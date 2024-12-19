@@ -2,8 +2,8 @@ FROM node:22.12 AS build-frontend
 
 WORKDIR /tmp
 
-COPY package.json ./
-RUN npm install
+COPY package-lock.json package.json ./
+RUN npm ci
 
 COPY . ./
 ENV APP_BACKEND /api/
