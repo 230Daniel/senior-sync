@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [ "main", "docker-build-ci" ]
+    branches: [ "main" ]
     commit-ignore:
     - [skip ci]
     - [ci skip]
