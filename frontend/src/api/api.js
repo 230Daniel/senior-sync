@@ -27,5 +27,6 @@ export async function getCurrentMetrics() {
 		{ "id": "blood-pressure", "name": "Blood Pressure", "value": "102/72", "unit": "mmhg", "status": "green" },
 		{ "id": "respiratory-rate", "name": "Respiratory Rate", "value": random(14, 16), "unit": "RPM", "status": "amber" },
 		{ "id": "body-temperature", "name": "Body Temperature", "value": random(36, 38), "unit": "°C", "status": "green" },
+		{ "id": "vibe-index", "name": "Vibe Index", "value": "No Data", "unit": "", "status": "gray" },
 	];
 }
