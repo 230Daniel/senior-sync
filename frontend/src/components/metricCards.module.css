@@ -1,9 +1,8 @@
 .cards {
 	display: flex;
-
+	margin: 25px;
 	gap: 25px;
 	flex-wrap: wrap;
-	background-color: var(--col-background-highlight);
 }
 
 .card {
@@ -23,6 +22,8 @@
 	box-shadow: 10px 10px 5px var(--col-shadow);
 	background-color: var(--col-card);
 	overflow: hidden;
+	color: white;
+	text-decoration: none;
 
 	font-size: 1.5em;
 	cursor: pointer;

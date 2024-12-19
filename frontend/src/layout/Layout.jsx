@@ -6,7 +6,7 @@ function Layout() {
 	return (
 		<>
 			<header className={classes.header}>
-				<div className={classes.headerContainer}>
+				<div className="container">
 					<NavLink to="/" className={classes.brand}>
 						<svg className={classes.logo} height="800px" width="800px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 471.701 471.701">
 							<g>

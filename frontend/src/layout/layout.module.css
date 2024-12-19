@@ -7,14 +7,6 @@
     margin-bottom: 2em;
 }
 
-.headerContainer {
-    width: 75%;
-    min-width: 700px;
-    height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .brand {
     display: flex;
     height: 100%;
