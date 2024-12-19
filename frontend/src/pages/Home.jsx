@@ -18,7 +18,7 @@ function Home() {
             <h1>Senior Sync</h1>
             <p>The backend is {__APP_BACKEND}.</p>
             <p>The backend says {content ? content : "..."}</p>
-            <h1 style={{ marginTop: "32px" }}>Health At a glance</h1>
+            <h1 style={{ marginTop: "32px" }}>Health at a glance</h1>
             <HealthMetrics />
         </>
     );
