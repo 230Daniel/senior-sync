@@ -1,0 +1,19 @@
+name: senior-sync
+
+services:
+
+  backend:
+    image: 230daniel/private:senior-sync-backend
+    restart: unless-stopped
+
+  frontend:
+    image: 230daniel/private:senior-sync-frontend
+    volumes:
+      - '/etc/letsencrypt:/etc/letsencrypt:ro'
+    environment:
+      SSL_CERTIFICATE_PATH: '/etc/letsencrypt/live/pi.utili.xyz/fullchain.pem'
+      SSL_CERTIFICATE_KEY_PATH: '/etc/letsencrypt/live/pi.utili.xyz/privkey.pem'
+    ports:
+      - '443:443'
+      - '80:80'
+    restart: unless-stopped

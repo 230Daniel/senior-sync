@@ -52,6 +52,8 @@ These steps will start the backend up locally so that you can interact with it o
 
 Production (non-development) deployment is done with Docker, so it can only be performed on a Linux system. Most developers don't need to worry about this, it will just be used to create the artefact for demos or publically accessible instances.
 
+## From local repository
+
 1. Install docker and the docker compose plugin.
 
 2. Get an SSL certificate for the domain your Linux system is reachable through. (I recommend [certbot](https://certbot.eff.org/instructions?ws=other&os=pip) with [acme-dns](https://github.com/acme-dns/acme-dns-client))
@@ -65,3 +67,21 @@ Production (non-development) deployment is done with Docker, so it can only be p
 5. Edit the `frontend > ports` section of `docker-compose.yml` to set the external ports for the frontend to listen on. For example `8080:443` will point port 8080 on the host to port 443 (HTTPS) in the container.
 
 6. Run `docker compose up -d --build` to build and start the containers.
+
+## From Docker Hub
+
+The images are pushed to a private Docker Hub repo, ask for access if you need it. Images are built for amd64 and arm64.
+
+1. Follow steps 1 to 5 above, but use `docker-compose-prebuild.yml` instead. You don't need to clone the whole repository, you just need that single file.
+
+2. Log in to docker hub with an account that has access to the private repo 230daniel/private. `docker login`.
+
+3. Run `docker compose -f docker-compose-prebuilt.yml up -d` to download and start the containers.
+
+4. To update the containers when a new CI run on the main branch is completed, run:
+
+```
+docker compose -f docker-compose-prebuilt.yml down
+docker compose -f docker-compose-prebuilt.yml pull
+docker compose -f docker-compose-prebuilt.yml up -d
+```
