@@ -1,9 +1,11 @@
 :root {
-	--col-primary: #e41e4f;
-	--col-status-green: #49af5f;
-	--col-status-amber: #ac8300;
-	--col-status-red: #e41e4f;
-	--col-status-gray: #575757;
+	--theme-col-primary: #e41e4f;
+	--theme-col-primary-contrast: #fff;
+
+	--theme-col-status-green: #49af5f;
+	--theme-col-status-amber: #ac8300;
+	--theme-col-status-red: #e41e4f;
+	--theme-col-status-gray: #575757;
 }
 
 :root:has(.dark) {
@@ -34,6 +36,8 @@
 	--theme-col-link: #ffff00;
 	--theme-col-link-hover: #00ffff;
 	--theme-col-card: #272727;
+	--theme-col-primary: #ffff00;
+	--theme-col-primary-contrast: #000;
 }
 
 .selector {
