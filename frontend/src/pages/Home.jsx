@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
 
-import { getRoot } from "./api/api";
+import { getRoot } from "../api/api";
+import HealthMetrics from "../components/MetricCards";
 
-function App() {
+function Home() {
 
     const [content, setContent] = useState(null);
 
@@ -16,11 +16,12 @@ function App() {
     return (
         <>
             <h1>Senior Sync</h1>
-            <Link to="/something">Go to something</Link>
             <p>The backend is {__APP_BACKEND}.</p>
             <p>The backend says {content ? content : "..."}</p>
+            <h1 style={{ marginTop: "32px" }}>Health at a glance</h1>
+            <HealthMetrics />
         </>
     );
 }
 
-export default App;
+export default Home;
