@@ -1,17 +1,28 @@
 :root:has(.dark) {
-	--color-scheme: dark;
-
-	--col-background: #1e1e1e;
-	--col-nav: #313131;
-	--col-shadow: #131313;
+	--theme-color-scheme: dark;
+	--theme-col-background: #1e1e1e;
+	--theme-col-nav: #313131;
+	--theme-col-shadow: #131313;
+	--theme-col-link: #03bfd6;
+	--theme-col-link-hover: #038ed6;
 }
 
 :root:has(.light) {
-	--color-scheme: light;
+	--theme-color-scheme: light;
+	--theme-col-background: #eeeeee;
+	--theme-col-nav: #e2e2e2;
+	--theme-col-shadow: #a3a3a3;
+	--theme-col-link: #036aaa;
+	--theme-col-link-hover: #02367e;
+}
 
-	--col-background: #eeeeee;
-	--col-nav: #e2e2e2;
-	--col-shadow: #a3a3a3;
+:root:has(.highContrast) {
+	--theme-color-scheme: dark;
+	--theme-col-background: #000;
+	--theme-col-nav: #111111;
+	--theme-border: 1px solid #ffff00;
+	--theme-col-link: #ffff00;
+	--theme-col-link-hover: #00ffff;
 }
 
 .selector {

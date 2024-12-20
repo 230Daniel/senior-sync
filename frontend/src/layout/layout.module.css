@@ -1,8 +1,9 @@
 .header {
     display: flex;
     height: 65px;
-    background-color: var(--col-nav);
-    box-shadow: 0 5px 10px var(--col-shadow);
+    background-color: var(--theme-col-nav);
+    box-shadow: 0 5px 10px var(--theme-col-shadow);
+    border-bottom: var(--theme-border);
     align-items: center;
     margin-bottom: 2em;
 }

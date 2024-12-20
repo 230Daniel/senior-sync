@@ -7,14 +7,22 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  color-scheme: var(--color-scheme);
-  background-color: var(--col-background);
+  color-scheme: var(--theme-color-scheme);
+  background-color: var(--theme-col-background);
 }
 
 * {
   box-sizing: border-box;
   padding: 0px;
   margin: 0px;
+}
+
+a {
+  color: var(--theme-col-link);
+
+  &:hover {
+    color: var(--theme-col-link-hover);
+  }
 }
 
 #root {
@@ -28,11 +36,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /*background-color: var(--col-background);*/
-  /*color-scheme: var(--color-scheme);*/
-  color-scheme: light dark;
-  background-color: var(--col-background);
 }
 
 .container {
