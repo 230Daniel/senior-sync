@@ -13,10 +13,10 @@
 
   --col-primary: #e41e4f;
 
-  --col-status-green: #49af5f;
-  --col-status-amber: #ac8300;
-  --col-status-red: #e41e4f;
-  --col-status-gray: #575757;
+  --theme-col-status-green: #49af5f;
+  --theme-col-status-amber: #ac8300;
+  --theme-col-status-red: #e41e4f;
+  --theme-col-status-gray: #575757;
 
   --col-background: #1e1e1e;
 
@@ -41,16 +41,10 @@
 
 .container {
   width: 75%;
+  min-width: 700px;
   height: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-  transition: width 0.2s, padding 0.2s;
-}
-
-@media only screen and (max-width: 700px) {
-  .container {
-    width: 100%;
-    padding-left: 25px;
-    padding-right: 25px;
-  }
 }
