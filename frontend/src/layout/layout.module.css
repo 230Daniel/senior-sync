@@ -42,7 +42,7 @@
 
 .brand:hover {
     color: #ffffff;
-    box-shadow: inset 230px 0 0 0 var(--col-primary);
+    box-shadow: inset 230px 0 0 0 #e41e4f;
 }
 
 .brand:hover>.logo {

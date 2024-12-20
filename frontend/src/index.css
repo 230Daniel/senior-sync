@@ -11,8 +11,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --col-primary: #e41e4f;
-
   --theme-col-status-green: #49af5f;
   --theme-col-status-amber: #ac8300;
   --theme-col-status-red: #e41e4f;
