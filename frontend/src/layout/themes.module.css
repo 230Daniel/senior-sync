@@ -1,0 +1,31 @@
+:root:has(.dark) {
+	--color-scheme: dark;
+
+	--col-background: #1e1e1e;
+	--col-nav: #313131;
+	--col-shadow: #131313;
+}
+
+:root:has(.light) {
+	--color-scheme: light;
+
+	--col-background: #eeeeee;
+	--col-nav: #e2e2e2;
+	--col-shadow: #a3a3a3;
+}
+
+.selector {
+	all: unset;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+
+	&:hover {
+		transform: scale(1.25);
+	}
+
+	&:focus {
+		outline: revert
+	}
+}
