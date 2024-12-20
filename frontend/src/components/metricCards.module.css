@@ -92,7 +92,6 @@
 
 .card:hover>.cardRow {
 	color: var(--theme-col-status-contrast);
-	;
 }
 
 .metricValue {
