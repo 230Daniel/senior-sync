@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { MdLightMode, MdDarkMode, MdOutlineContrast } from "react-icons/md";
+import { useCookies } from "react-cookie";
 
 import classes from "./themes.module.css";
 
@@ -20,10 +21,18 @@ export default function ThemeSelector() {
 			"name": "High Contrast Mode",
 			"className": classes.highContrast,
 			"icon": MdOutlineContrast
-		},
+		}
 	];
 
-	const [themeIndex, setThemeIndex] = useState(0);
+	// Initialise themeIndex state to the value of the themeIndex cookie if set, or 0.
+	const [cookies, setCookie] = useCookies(["themeIndex"]);
+	const [themeIndex, setThemeIndex] = useState(cookies.themeIndex ?? 0);
+
+	// Effect to set themeIndex cookie whenever themeIndex state changes.
+	useEffect(() => {
+		setCookie("themeIndex", themeIndex, { expires: new Date("9999-01-01") });
+	}, [themeIndex]);
+
 	const nextThemeIndex = themeIndex + 1 >= Themes.length ? 0 : themeIndex + 1;
 	const nextTheme = Themes[nextThemeIndex];
 
