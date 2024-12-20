@@ -1,3 +1,11 @@
+:root {
+	--col-primary: #e41e4f;
+	--col-status-green: #49af5f;
+	--col-status-amber: #ac8300;
+	--col-status-red: #e41e4f;
+	--col-status-gray: #575757;
+}
+
 :root:has(.dark) {
 	--theme-color-scheme: dark;
 	--theme-col-background: #1e1e1e;
@@ -5,6 +13,7 @@
 	--theme-col-shadow: #131313;
 	--theme-col-link: #03bfd6;
 	--theme-col-link-hover: #038ed6;
+	--theme-col-card: #272727;
 }
 
 :root:has(.light) {
@@ -14,6 +23,7 @@
 	--theme-col-shadow: #a3a3a3;
 	--theme-col-link: #036aaa;
 	--theme-col-link-hover: #02367e;
+	--theme-col-card: #f9f9f9;
 }
 
 :root:has(.highContrast) {
@@ -23,6 +33,7 @@
 	--theme-border: 1px solid #ffff00;
 	--theme-col-link: #ffff00;
 	--theme-col-link-hover: #00ffff;
+	--theme-col-card: #272727;
 }
 
 .selector {
