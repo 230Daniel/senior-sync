@@ -2,11 +2,13 @@ import { NavLink, Outlet } from 'react-router';
 
 import classes from './layout.module.css';
 
+import ThemeSelector from './ThemeSelector';
+
 function Layout() {
 	return (
 		<>
 			<header className={classes.header}>
-				<div className={classes.headerContainer}>
+				<div className="container">
 					<NavLink to="/" className={classes.brand}>
 						<svg className={classes.logo} height="800px" width="800px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 471.701 471.701">
 							<g>
@@ -19,6 +21,9 @@ function Layout() {
 						</svg>
 						Senior Sync
 					</NavLink>
+					<div className={classes.themeSelector}>
+						<ThemeSelector />
+					</div>
 				</div>
 			</header>
 			<main>

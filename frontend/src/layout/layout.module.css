@@ -1,18 +1,16 @@
 .header {
     display: flex;
     height: 65px;
-    background-color: var(--col-nav);
-    box-shadow: 0 5px 10px var(--col-shadow);
+    background-color: var(--theme-col-nav);
+    box-shadow: 0 5px 10px var(--theme-col-shadow);
+    border-bottom: var(--theme-border);
     align-items: center;
     margin-bottom: 2em;
 }
 
-.headerContainer {
-    width: 75%;
-    min-width: 700px;
-    height: 100%;
+.themeSelector {
+    font-size: 30px;
     margin-left: auto;
-    margin-right: auto;
 }
 
 .brand {
@@ -24,8 +22,8 @@
     justify-content: center;
 
     text-decoration: none;
-    color: #e41e4f;
-    box-shadow: inset 0 0 0 0 #e41e4f;
+    color: var(--theme-col-primary);
+    box-shadow: inset 0 0 0 0 var(--theme-col-primary);
     transition: color .2s ease-in-out, box-shadow .2s ease-in-out;
 }
 
@@ -36,15 +34,15 @@
 
     font-size: 40px;
 
-    fill: #e41e4f;
+    fill: var(--theme-col-primary);
     transition: fill 0.2s ease-in-out;
 }
 
 .brand:hover {
-    color: #ffffff;
-    box-shadow: inset 230px 0 0 0 #e41e4f;
+    color: var(--theme-col-primary-contrast);
+    box-shadow: inset 230px 0 0 0 var(--theme-col-primary);
 }
 
 .brand:hover>.logo {
-    fill: #ffffff;
+    fill: var(--theme-col-primary-contrast);
 }
