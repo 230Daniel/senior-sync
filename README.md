@@ -47,6 +47,24 @@ These steps will start the backend up locally so that you can interact with it o
 
 6. Run `fastapi dev main.py` to start up the backend on http://127.0.0.1:8000.
 
+### Setting up Mongo Database on Windows
+
+For a youtube tutorial on the following instructions please watch https://www.youtube.com/watch?v=c2M-rlkkT5o&t=1s.
+
+1. Install Mongodb. Go to https://www.mongodb.com/try/download/community. Select the latest version, platform and package type. Click download.
+
+2. Run the installer and follow the installation wizard (ensure that the checkbox install mongodb as a service is checked, and install mongodb compass is checked).
+
+3. Install Mongodb shell AKA Mongosh. Go to https://www.mongodb.com/try/download/shell. Select the latest version, platform and package type. Click download.
+
+4. Extract the Mongosh files from the downloaded zip file.
+
+5. Open the Mongosh folder and navigate to the mongosh.exe file. ..\mongosh-2.3.7-win32-x64\mongosh-2.3.7-win32-x64\bin\mongosh.exe. Right click the file, go to properties and copy the file location.
+
+6. Add the mongosh.exe file path to system variables and add to path under user variables.
+
+7. Optional, install the VS code mongodb extension. Open VS code, go to extensions, search for MongoDB for VS code, install.
+
 
 # Production Deployment (Linux only)
 
