@@ -19,14 +19,22 @@
 	align-items: center;
 
 	border-radius: 4px;
-	box-shadow: 10px 10px 5px var(--col-shadow);
-	background-color: var(--col-card);
+	box-shadow: 10px 10px 5px var(--theme-col-shadow);
+	border: var(--theme-border);
+	background-color: var(--theme-col-card);
 	overflow: hidden;
 	color: white;
 	text-decoration: none;
 
 	font-size: 1.5em;
 	cursor: pointer;
+
+	color: inherit;
+	transition: color 0.2s ease-out;
+
+	&:hover {
+		color: var(--theme-col-status-contrast);
+	}
 }
 
 .card:before {
@@ -62,7 +70,7 @@
 }
 
 .cornerArrow {
-	color: white;
+	color: var(--theme-col-status-contrast);
 	margin-top: -0.25em;
 	margin-right: -0.25em;
 }
@@ -83,7 +91,7 @@
 }
 
 .card:hover>.cardRow {
-	color: white;
+	color: var(--theme-col-status-contrast);
 }
 
 .metricValue {
