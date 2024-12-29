@@ -1,0 +1,99 @@
+.cards {
+	display: flex;
+	margin: 25px;
+	gap: 25px;
+	flex-wrap: wrap;
+}
+
+.card {
+	position: relative;
+	top: 0;
+	left: 0;
+	z-index: 0;
+
+	display: flex;
+	height: 220px;
+	width: 220px;
+
+	flex-direction: column;
+	align-items: center;
+
+	border-radius: 4px;
+	box-shadow: 10px 10px 5px var(--theme-col-shadow);
+	border: var(--theme-border);
+	background-color: var(--theme-col-card);
+	overflow: hidden;
+	color: white;
+	text-decoration: none;
+
+	font-size: 1.5em;
+	cursor: pointer;
+
+	color: inherit;
+	transition: color 0.2s ease-out;
+
+	&:hover {
+		color: var(--theme-col-status-contrast);
+	}
+}
+
+.card:before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: -16px;
+	right: -16px;
+	background: var(--col-card-status);
+	height: 32px;
+	width: 32px;
+	border-radius: 32px;
+	transform: scale(1);
+	transform-origin: 50% 50%;
+	transition: transform 0.25s ease-out;
+}
+
+.card:hover:before {
+	transform: scale(21);
+}
+
+.corner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	width: 32px;
+	height: 32px;
+	top: 0;
+	right: 0;
+	background-color: var(--col-card-status);
+	border-radius: 0 4px 0 32px;
+}
+
+.cornerArrow {
+	color: var(--theme-col-status-contrast);
+	margin-top: -0.25em;
+	margin-right: -0.25em;
+}
+
+.card>* {
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
+}
+
+.cardRow {
+	justify-content: center;
+	align-items: baseline;
+	flex-wrap: wrap;
+	padding: 0 0.3em 0 0.3em;
+	color: var(--col-card-status);
+	transition: color 0.25s ease-in-out;
+}
+
+.card:hover>.cardRow {
+	color: var(--theme-col-status-contrast);
+}
+
+.metricValue {
+	margin-bottom: -0.75em;
+}

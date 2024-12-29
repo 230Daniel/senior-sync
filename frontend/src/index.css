@@ -7,6 +7,19 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  --theme-col-status-green: #49af5f;
+  --theme-col-status-amber: #ac8300;
+  --theme-col-status-red: #e41e4f;
+  --theme-col-status-gray: #575757;
+
+  --col-background: #1e1e1e;
+
+  --col-nav: #313131;
+  --col-nav-hover: #383838;
+  --col-shadow: #131313;
+
+  --col-card: #272727;
+  --col-card-title: #353535;
   color-scheme: var(--theme-color-scheme);
   background-color: var(--theme-col-background);
 }

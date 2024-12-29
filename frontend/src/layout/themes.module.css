@@ -6,6 +6,7 @@
 	--theme-col-status-amber: #ac8300;
 	--theme-col-status-red: #e41e4f;
 	--theme-col-status-gray: #575757;
+	--theme-col-status-contrast: #fff;
 }
 
 :root:has(.dark) {
@@ -26,6 +27,7 @@
 	--theme-col-link: #036aaa;
 	--theme-col-link-hover: #02367e;
 	--theme-col-card: #f9f9f9;
+	--theme-col-status-gray: #c7c7c7;
 }
 
 :root:has(.highContrast) {
@@ -35,9 +37,15 @@
 	--theme-border: 1px solid #ffff00;
 	--theme-col-link: #ffff00;
 	--theme-col-link-hover: #00ffff;
-	--theme-col-card: #272727;
 	--theme-col-primary: #ffff00;
 	--theme-col-primary-contrast: #000;
+	--theme-col-card: #131313;
+
+	--theme-col-status-green: #33ff5f;
+	--theme-col-status-amber: #ffc400;
+	--theme-col-status-red: #ff0040;
+	--theme-col-status-gray: #d4d4d4;
+	--theme-col-status-contrast: #000;
 }
 
 .selector {
