@@ -8,7 +8,7 @@ services:
         volumes:
             - './mongodb-data:/data/db'
         networks:
-            - backend
+            - mongo
 
     mongo-panel:
         image: mongo-express:latest
@@ -21,8 +21,8 @@ services:
             ME_CONFIG_BASICAUTH_PASSWORD: situation-obtuse-quickly
             ME_CONFIG_MONGODB_SERVER: mongo
         networks:
-            - backend
-            - frontend
+            - mongo
+            - nginx
 
     backend:
         image: 230daniel/private:senior-sync-backend
@@ -32,8 +32,8 @@ services:
         environment:
             MONGO_HOST: mongodb://mongo:27017
         networks:
-            - backend
-            - frontend
+            - mongo
+            - nginx
 
     frontend:
         image: 230daniel/private:senior-sync-frontend
@@ -44,10 +44,10 @@ services:
         ports:
             - '8443:443'
         networks:
-            - frontend
+            - nginx
 
 networks:
-    backend:
+    mongo:
         driver: bridge
-    frontend:
+    nginx:
         driver: bridge
