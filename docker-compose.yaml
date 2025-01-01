@@ -2,11 +2,11 @@ name: senior-sync
 
 services:
 
-    database:
+    mongo:
         image: mongo:8
         restart: unless-stopped
         volumes:
-            - './database:/data/db'
+            - './mongodb-data:/data/db'
         networks:
             - backend
 
@@ -16,7 +16,9 @@ services:
             dockerfile: 'Dockerfile'
         restart: unless-stopped
         depends_on:
-            - 'database'
+            - 'mongo'
+        environment:
+            MONGO_HOST: mongodb://mongo:27017
         networks:
             - backend
             - frontend
