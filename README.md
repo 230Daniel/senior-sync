@@ -70,19 +70,21 @@ For a youtube tutorial on the following instructions please watch https://www.yo
 
 Production (non-development) deployment is done with Docker, so it can only be performed on a Linux system. Most developers don't need to worry about this, it will just be used to create the artefact for demos or publically accessible instances.
 
+The Docker deployment also includes the MongoDB database and an admin panel accessible on `/mongo` with username `mongo` and password `quickly-obtuse-situation`.
+
 ## From local repository
 
 1. Install docker and the docker compose plugin.
 
 2. Get an SSL certificate for the domain your Linux system is reachable through. (I recommend [certbot](https://certbot.eff.org/instructions?ws=other&os=pip) with [acme-dns](https://github.com/acme-dns/acme-dns-client))
 
-3. Edit the `frontend > volumes` section of `docker-compose.yml` to make your SSL certificates accessible from within the frontend container.
+3. Edit the `frontend > ports` section of `docker-compose.yml` to set the external ports for the frontend to listen on. For example `8443:443` will point port 8443 on the host to port 443 (HTTPS) in the container.
 
-4. Edit the `frontend > environment` section of `docker-compose.yml` to point the variables `SSL_CERTIFICATE_PATH` and `SSL_CERTIFICATE_KEY_PATH` to your SSL certificate and SSL certificate private key files respectively.
+4. Edit the `frontend > volumes` section of `docker-compose.yml` to make your SSL certificates accessible from within the frontend container.
 
-> If you're not using SSL certificates, remove references to SSL from `frontend/nginx.conf.template`.
+5. Edit the `ssl_certificate` and `ssl_certificate_key` lines of `nginx.conf` to provide nginx the paths to the SSL certificate files within the container.
 
-5. Edit the `frontend > ports` section of `docker-compose.yml` to set the external ports for the frontend to listen on. For example `8080:443` will point port 8080 on the host to port 443 (HTTPS) in the container.
+> If you're not using SSL certificates, remove references to SSL from `nginx.conf`.
 
 6. Run `docker compose up -d --build` to build and start the containers.
 
