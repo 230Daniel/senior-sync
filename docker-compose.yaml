@@ -18,7 +18,7 @@ services:
         environment:
             ME_CONFIG_SITE_BASEURL: "/mongo/"
             ME_CONFIG_BASICAUTH_USERNAME: mongo
-            ME_CONFIG_BASICAUTH_PASSWORD: situation-obtuse-quickly
+            ME_CONFIG_BASICAUTH_PASSWORD: quickly-obtuse-situation
             ME_CONFIG_MONGODB_SERVER: mongo
         networks:
             - mongo
