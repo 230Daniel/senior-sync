@@ -2,12 +2,26 @@ name: senior-sync
 
 services:
 
+  database:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - './database:/data/db'
+    networks:
+      - backend
+
   backend:
     image: 230daniel/private:senior-sync-backend
     restart: unless-stopped
+    depends_on:
+      - 'database'
+    networks:
+      - backend
+      - frontend
 
   frontend:
     image: 230daniel/private:senior-sync-frontend
+    restart: unless-stopped
     volumes:
       - '/etc/letsencrypt:/etc/letsencrypt:ro'
     environment:
@@ -16,4 +30,11 @@ services:
     ports:
       - '443:443'
       - '80:80'
-    restart: unless-stopped
+    networks:
+      - frontend
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
