@@ -2,41 +2,53 @@ name: senior-sync
 
 services:
 
-  mongo:
-    image: mongo:8
-    restart: unless-stopped
-    volumes:
-      - './mongodb-data:/data/db'
-    networks:
-      - backend
+    mongo:
+        image: mongo:8
+        restart: unless-stopped
+        volumes:
+            - './mongodb-data:/data/db'
+        networks:
+            - backend
 
-  backend:
-    image: 230daniel/private:senior-sync-backend
-    restart: unless-stopped
-    depends_on:
-      - 'mongo'
-    environment:
-      MONGO_HOST: mongodb://mongo:27017
-    networks:
-      - backend
-      - frontend
+    mongo-panel:
+        image: mongo-express:latest
+        restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            # ME_CONFIG_BASICAUTH_USERNAME: username
+            # ME_CONFIG_BASICAUTH_PASSWORD: password
+            ME_CONFIG_MONGODB_SERVER: mongo
+        networks:
+            - backend
 
-  frontend:
-    image: 230daniel/private:senior-sync-frontend
-    restart: unless-stopped
-    volumes:
-      - '/etc/letsencrypt:/etc/letsencrypt:ro'
-    environment:
-      SSL_CERTIFICATE_PATH: '/etc/letsencrypt/live/pi.utili.xyz/fullchain.pem'
-      SSL_CERTIFICATE_KEY_PATH: '/etc/letsencrypt/live/pi.utili.xyz/privkey.pem'
-    ports:
-      - '443:443'
-      - '80:80'
-    networks:
-      - frontend
+    backend:
+        image: 230daniel/private:senior-sync-backend
+        restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            MONGO_HOST: mongodb://mongo:27017
+        networks:
+            - backend
+            - frontend
+
+    frontend:
+        image: 230daniel/private:senior-sync-frontend
+        restart: unless-stopped
+        volumes:
+            - '/etc/letsencrypt:/etc/letsencrypt:ro'
+        environment:
+            SSL_CERTIFICATE_PATH: '/etc/letsencrypt/live/pi.utili.xyz/fullchain.pem'
+            SSL_CERTIFICATE_KEY_PATH: '/etc/letsencrypt/live/pi.utili.xyz/privkey.pem'
+        ports:
+            - '443:443'
+            - '80:80'
+        networks:
+            - frontend
 
 networks:
-  backend:
-    driver: bridge
-  frontend:
-    driver: bridge
+    backend:
+        driver: bridge
+    frontend:
+        driver: bridge

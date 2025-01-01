@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [ "SYNC-55-Database-in-Docker-compose-deployment" ]
+    branches: [ "main" ]
     commit-ignore:
     - [skip ci]
     - [ci skip]
@@ -32,7 +32,7 @@ jobs:
         context: ./backend
         file: ./backend/Dockerfile
         platforms: linux/amd64,linux/arm64
-        tags: 230daniel/private:senior-sync-backend-sync-55
+        tags: 230daniel/private:senior-sync-backend
         push: true
 
   build-frontend:
@@ -57,5 +57,5 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         platforms: linux/amd64,linux/arm64
-        tags: 230daniel/private:senior-sync-frontend-sync-55
+        tags: 230daniel/private:senior-sync-frontend
         push: true

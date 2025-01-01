@@ -10,6 +10,18 @@ services:
         networks:
             - backend
 
+    mongo-panel:
+        image: mongo-express:latest
+        restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            # ME_CONFIG_BASICAUTH_USERNAME: username
+            # ME_CONFIG_BASICAUTH_PASSWORD: password
+            ME_CONFIG_MONGODB_SERVER: mongo
+        networks:
+            - backend
+
     backend:
         build:
             context: './backend'
