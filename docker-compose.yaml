@@ -21,6 +21,7 @@ services:
             ME_CONFIG_MONGODB_SERVER: mongo
         networks:
             - backend
+            - frontend
 
     backend:
         build:
