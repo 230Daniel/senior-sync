@@ -27,7 +27,7 @@ server {
 
   # Forward traffic on /mongo to the mongodb admin panel
   location /mongo/ {
-    proxy_pass         http://mongo:80/;
+    proxy_pass         http://mongo-panel:80/;
     proxy_http_version 1.1;
     proxy_set_header   Upgrade $http_upgrade;
     proxy_set_header   Connection keep-alive;
