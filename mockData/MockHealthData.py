@@ -50,7 +50,7 @@ def main():
             elif mode == "death":
                 heart_rate = HealthData.flat_line()
 
-            response = requests.post("http://localhost:8000/metrics/heart_rate/now", json=heart_rate)
+            response = requests.post("http://localhost:8000/api/metrics/heart_rate/now", json=heart_rate)
             response.raise_for_status()
             print(f"Current Heart Rate: {heart_rate} bpm", end="\r")
             time.sleep(2)  # Wait for 2 second before refreshing
