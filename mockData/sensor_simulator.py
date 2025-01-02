@@ -7,6 +7,10 @@ def main():
     print("\nStarting Health Simulator\n")
     mode = "normal"
     api_endpoint = ""
+    id = ""
+    friendly_name = ""
+    unit = ""
+    value_type = int
 
     while True:
         sensor = input("Type 'O2' for Blood Oxygen level sensor or type 'heart' for Heart Rate monitor\n")
@@ -22,11 +26,25 @@ def main():
     match sensor:
         case 'O2':
             api_endpoint = "http://localhost:8000/api/metrics/O2_level/now"
+            id = "o2_level"
+            friendly_name = "O2 Level"
+            unit = "%"
+            value_type = int
 
         case 'heart':
             api_endpoint = "http://localhost:8000/api/metrics/heart_rate/now"
+            id = "heart_rate"
+            friendly_name = "Heart Rate"
+            unit = "bpm"
+            value_type = int
 
-    response = requests.post(api_endpoint, json=value)
+    response = requests.post(api_endpoint, json=
+                            {
+                                "_id": id,
+                                "friendly_name": friendly_name,
+                                "unit": unit,
+                                "value_type": value_type
+                            })
     response.raise_for_status()
 
     try:
