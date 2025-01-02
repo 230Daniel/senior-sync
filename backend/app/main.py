@@ -1,16 +1,15 @@
 from fastapi import FastAPI
-from dotenv import load_dotenv
 import uvicorn
 
 from .routers import sensors, metrics
 
-app = FastAPI(redirect_slashes=False)
+app = FastAPI(root_path="/api")
 
 app.include_router(sensors.router, tags=["Sensors"], prefix="/sensors")
 app.include_router(metrics.router, tags=["Metrics"], prefix="/metrics")
 
 
-@app.get("/")
+@app.get("")
 async def read_root():
     return f"hello, I am the backend, I speak for the trees."
 
