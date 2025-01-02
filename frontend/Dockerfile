@@ -6,7 +6,7 @@ COPY package-lock.json package.json ./
 RUN npm ci
 
 COPY . ./
-ENV APP_BACKEND /api/
+ENV APP_BACKEND /api
 RUN npm run build
 
 FROM nginx
