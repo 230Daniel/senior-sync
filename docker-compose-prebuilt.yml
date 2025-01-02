@@ -2,18 +2,52 @@ name: senior-sync
 
 services:
 
-  backend:
-    image: 230daniel/private:senior-sync-backend
-    restart: unless-stopped
+    mongo:
+        image: mongo:8
+        restart: unless-stopped
+        volumes:
+            - './mongodb-data:/data/db'
+        networks:
+            - mongo
 
-  frontend:
-    image: 230daniel/private:senior-sync-frontend
-    volumes:
-      - '/etc/letsencrypt:/etc/letsencrypt:ro'
-    environment:
-      SSL_CERTIFICATE_PATH: '/etc/letsencrypt/live/pi.utili.xyz/fullchain.pem'
-      SSL_CERTIFICATE_KEY_PATH: '/etc/letsencrypt/live/pi.utili.xyz/privkey.pem'
-    ports:
-      - '443:443'
-      - '80:80'
-    restart: unless-stopped
+    mongo-panel:
+        image: mongo-express:latest
+        restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            ME_CONFIG_SITE_BASEURL: "/mongo/"
+            ME_CONFIG_BASICAUTH_USERNAME: mongo
+            ME_CONFIG_BASICAUTH_PASSWORD: quickly-obtuse-situation
+            ME_CONFIG_MONGODB_SERVER: mongo
+        networks:
+            - mongo
+            - nginx
+
+    backend:
+        image: 230daniel/private:senior-sync-backend
+        restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            MONGO_HOST: mongodb://mongo:27017
+        networks:
+            - mongo
+            - nginx
+
+    frontend:
+        image: 230daniel/private:senior-sync-frontend
+        restart: unless-stopped
+        volumes:
+            - '/etc/letsencrypt:/etc/letsencrypt:ro'
+            - './nginx.conf:/etc/nginx/conf.d/default.conf:ro'
+        ports:
+            - '8443:443'
+        networks:
+            - nginx
+
+networks:
+    mongo:
+        driver: bridge
+    nginx:
+        driver: bridge

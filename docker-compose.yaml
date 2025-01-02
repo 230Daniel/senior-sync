@@ -2,22 +2,56 @@ name: senior-sync
 
 services:
 
+    mongo:
+        image: mongo:8
+        restart: unless-stopped
+        volumes:
+            - './mongodb-data:/data/db'
+        networks:
+            - mongo
+
+    mongo-panel:
+        image: mongo-express:latest
+        restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            ME_CONFIG_SITE_BASEURL: "/mongo/"
+            ME_CONFIG_BASICAUTH_USERNAME: mongo
+            ME_CONFIG_BASICAUTH_PASSWORD: quickly-obtuse-situation
+            ME_CONFIG_MONGODB_SERVER: mongo
+        networks:
+            - mongo
+            - nginx
+
     backend:
         build:
             context: './backend'
             dockerfile: 'Dockerfile'
         restart: unless-stopped
+        depends_on:
+            - 'mongo'
+        environment:
+            MONGO_HOST: mongodb://mongo:27017
+        networks:
+            - mongo
+            - nginx
 
     frontend:
         build:
             context: './frontend'
             dockerfile: 'Dockerfile'
+        restart: unless-stopped
         volumes:
             - '/etc/letsencrypt:/etc/letsencrypt:ro'
-        environment:
-            SSL_CERTIFICATE_PATH: '/etc/letsencrypt/live/pi.utili.xyz/fullchain.pem'
-            SSL_CERTIFICATE_KEY_PATH: '/etc/letsencrypt/live/pi.utili.xyz/privkey.pem'
+            - './nginx.conf:/etc/nginx/conf.d/default.conf:ro'
         ports:
-            - '443:443'
-            - '80:80'
-        restart: unless-stopped
+            - '8443:443'
+        networks:
+            - nginx
+
+networks:
+    mongo:
+        driver: bridge
+    nginx:
+        driver: bridge
