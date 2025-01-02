@@ -13,9 +13,14 @@ class HealthData:
     def heart_attack():
         """Generate a random heart rate value between 150 and 200 bpm."""
         return random.randint(150, 200)
-    def O2_levels():
-        """Generate a random heart rate value between 60 and 100 bpm."""
-        return random.randint(60, 100)
+    
+    # def flat_line():
+    #     """Generate a random heart rate value between 0 and 0 bpm."""
+    #     return 0
+
+    # def O2_levels():
+    #     """Generate a random heart rate value between 60 and 100 levels."""
+    #     return random.randint(60, 100)
     
 def main():
     print("\nMock Heart Rate Monitor\n")
