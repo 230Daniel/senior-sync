@@ -1,6 +1,7 @@
 import random
 import time
 import keyboard
+import requests
 
 class HealthData:
     def __init__(self):
@@ -30,21 +31,21 @@ def main():
             if keyboard.is_pressed("n"):
                 mode = "normal"
                 print("\nSwitched to NORMAL heart rate mode.", end="\n")
-                time.sleep(1)  # Prevent multiple immediate detections
+                time.sleep(2)  # Prevent multiple immediate detections
 
             elif keyboard.is_pressed("h"):
                 mode = "high"
                 print("\nSwitched to HIGH heart rate mode.", end="\n")
-                time.sleep(1)
+                time.sleep(2)
 
             if mode == "normal":
                 heart_rate = HealthData.heart_rate()
-                print(f"Current Heart Rate: {heart_rate} bpm", end="\r")
-                time.sleep(1)  # Wait for 1 second before refreshing
             elif mode == "high":
                 heart_rate = HealthData.heart_attack()
-                print(f"Current Heart Rate: {heart_rate} bpm", end="\r")
-                time.sleep(1)  # Wait for 1 second before refreshing
+            response = requests.post("http://localhost:8000/metrics/heart_rate/now", json=heart_rate)
+            response.raise_for_status()
+            print(f"Current Heart Rate: {heart_rate} bpm", end="\r")
+            time.sleep(2)  # Wait for 2 second before refreshing
     except KeyboardInterrupt:
         print("\nHeart rate monitoring stopped.")
 
