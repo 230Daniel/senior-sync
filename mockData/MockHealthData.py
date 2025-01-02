@@ -33,9 +33,14 @@ def main():
                 print("\nSwitched to NORMAL heart rate mode.", end="\n")
                 time.sleep(2)  # Prevent multiple immediate detections
 
-            elif keyboard.is_pressed("h"):
+            if keyboard.is_pressed("h"):
                 mode = "high"
                 print("\nSwitched to HIGH heart rate mode.", end="\n")
+                time.sleep(2)
+
+            elif keyboard.is_pressed("d"):
+                mode = "death"
+                print("\nSwitched to DEAD heart rate mode.", end="\n")
                 time.sleep(2)
 
             if mode == "normal":
