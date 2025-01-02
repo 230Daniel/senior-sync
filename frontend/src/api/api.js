@@ -1,5 +1,8 @@
+// The absolute path to the backend. If APP_BACKEND is /api/ this will become https://current.domain/api/.
+export const Backend = new URL(__APP_BACKEND, window.location.href).href;
+
 function get(endpoint) {
-	return fetch(new URL(endpoint, __APP_BACKEND));
+	return fetch(new URL(endpoint, Backend));
 }
 
 export async function getRoot() {
