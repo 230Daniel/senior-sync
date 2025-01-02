@@ -1,0 +1,17 @@
+import requests
+from bs4 import BeautifulSoup
+
+# Replace with the URL of the site
+url = "https://app.hyperate.io/KMS6E018"
+
+response = requests.get(url)
+
+if response.status_code == 200:
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    heartrate_element = soup.find(class_="heartrate")
+    heartrate = heartrate_element.text.strip()
+
+    print(heartrate)  # Check if the heart rate is visible in the HTML
+else:
+    print(f"Failed to fetch page: {response.status_code}")
