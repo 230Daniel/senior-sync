@@ -3,7 +3,7 @@ import uvicorn
 
 from .routers import sensors, metrics
 
-app = FastAPI(root_path="/api")
+app = FastAPI(root_path="/api", redirect_slashes=False)
 
 app.include_router(sensors.router, tags=["Sensors"], prefix="/sensors")
 app.include_router(metrics.router, tags=["Metrics"], prefix="/metrics")
