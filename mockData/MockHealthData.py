@@ -15,9 +15,9 @@ class HealthData:
         """Generate a random heart rate value between 150 and 200 bpm."""
         return random.randint(150, 200)
     
-    # def flat_line():
-    #     """Generate a random heart rate value between 0 and 0 bpm."""
-    #     return 0
+    def flat_line():
+        """Generate a random heart rate value between 0 and 0 bpm."""
+        return 0
 
     # def O2_levels():
     #     """Generate a random heart rate value between 60 and 100 levels."""
@@ -40,8 +40,11 @@ def main():
 
             if mode == "normal":
                 heart_rate = HealthData.heart_rate()
-            elif mode == "high":
+            if mode == "high":
                 heart_rate = HealthData.heart_attack()
+            elif mode == "death":
+                heart_rate = HealthData.flat_line()
+
             response = requests.post("http://localhost:8000/metrics/heart_rate/now", json=heart_rate)
             response.raise_for_status()
             print(f"Current Heart Rate: {heart_rate} bpm", end="\r")
