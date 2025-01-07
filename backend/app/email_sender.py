@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 import os
+import logging
+
 import boto3
 from botocore.exceptions import ClientError, BotoCoreError
 
-from logging import INFO, getLogger, basicConfig
-
-basicConfig(level=INFO)
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class BaseEmailSender(ABC):
