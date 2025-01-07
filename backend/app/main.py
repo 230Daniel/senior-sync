@@ -2,11 +2,12 @@ from fastapi import FastAPI
 import uvicorn
 import logging
 
+
 from .routers import sensors, metrics
 
 logging.basicConfig(level=logging.INFO)
 
-app = FastAPI(redirect_slashes=False)
+app = FastAPI(root_path="/api", redirect_slashes=False)
 
 app.include_router(sensors.router, tags=["Sensors"], prefix="/sensors")
 app.include_router(metrics.router, tags=["Metrics"], prefix="/metrics")
