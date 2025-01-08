@@ -2,6 +2,7 @@ from health_data import HealthData
 import time
 import keyboard
 import requests
+import json
 
 def main():
     print("\nStarting Health Simulator\n")
@@ -38,13 +39,13 @@ def main():
             unit = "bpm"
             value_type = int
 
-    response = requests.post(api_endpoint, json=
-                            {
-                                "_id": id,
-                                "friendly_name": friendly_name,
-                                "unit": unit,
-                                "value_type": value_type
-                            })
+    sensor_reg_json = {"_id": id,
+                       "friendly_name": friendly_name,
+                       "unit": unit,
+                       "value_type": value_type
+                       }
+
+    response = requests.post(api_endpoint, json=json.dumps(sensor_reg_json))
     response.raise_for_status()
 
     try:
