@@ -88,6 +88,7 @@ class MainActivity : Activity() {
         super.onDestroy()
         // Unregister the BroadcastReceiver when the Activity is destroyed
         unregisterReceiver(heartRateReceiver)
+        unregisterReceiver(statusReceiver)
     }
 
     private fun isInternetAvailable(): Boolean {
