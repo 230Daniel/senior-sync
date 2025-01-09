@@ -3,14 +3,31 @@ import { useParams } from "react-router";
 
 import { getMetricHistory } from "../api/api";
 
-import DateRangePicker from "../components/DateRangePicker";
+import { DateRangePicker, DateRangePickerDefaultValue } from "../components/DateRangePicker";
+import { useState } from "react";
 
-function Metric() {
+export default function MetricPage() {
 
 	const { metricId } = useParams();
 
-	const { data, error, isLoading } = useQuery("data", async () => {
-		return await getMetricHistory(metricId, new Date("2021-01-01"), new Date("2025-02-03"));
+	const [timeRange, setTimeRange] = useState(DateRangePickerDefaultValue);
+
+	return (
+		<>
+			<h1>Metric: {metricId}</h1>
+
+			<DateRangePicker
+				value={timeRange}
+				onChange={setTimeRange} />
+
+			<MetricGraph metricId={metricId} timeRange={timeRange} />
+		</>
+	);
+}
+
+function MetricGraph({ metricId, timeRange }) {
+	const { data, error, isLoading } = useQuery([metricId, timeRange], async () => {
+		return await getMetricHistory(metricId, timeRange[0], timeRange[1]);
 	});
 
 	if (isLoading) {
@@ -21,15 +38,9 @@ function Metric() {
 		return "error";
 	}
 
-	return (
-		<>
-			<h1>Metric: {metricId}</h1>
-			<DateRangePicker />
-			<p>
-				{JSON.stringify(data)}
-			</p>
-		</>
-	);
+	return <>
+		<p>
+			{data.map((value) => <>{value.timestamp} {value.value}<br /></>)}
+		</p>
+	</>;
 }
-
-export default Metric;
