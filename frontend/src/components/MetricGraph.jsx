@@ -32,7 +32,7 @@ export default function MetricGraph({ metricId, timeRange }) {
 
 	return <>
 		<LineChart
-			series={[{ dataKey: 'value', color: "var(--theme-col-primary)" }]}
+			series={[{ dataKey: 'value', color: "var(--theme-col-primary)", showMark: false }]}
 			dataset={dataToPlot}
 			xAxis={[{ dataKey: 'timestamp', scaleType: "utc", min: timeRange[0], max: timeRange[1] }]}
 			yAxis={[{

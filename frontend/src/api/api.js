@@ -20,11 +20,6 @@ async function get(endpoint) {
 	return response;
 }
 
-export async function getRoot() {
-	const response = await get("");
-	return await response.text();
-}
-
 export async function getCurrentMetrics() {
 	// TODO: Make this use the real endpoint once it exists.
 	// const response = await get("current_metrics");
