@@ -6,7 +6,7 @@ import { useState } from "react";
 import { DateRangePicker, DateRangePickerDefaultValue } from "../components/DateRangePicker";
 import MetricGraph from "../components/MetricGraph";
 
-import { getMetric } from "../api/api";
+import { getSensor } from "../api/api";
 
 export default function MetricPage() {
 
@@ -14,7 +14,7 @@ export default function MetricPage() {
 
 	const { data: metric, isLoading, isError } = useQuery([metricId],
 		async () => {
-			return await getMetric(metricId);
+			return await getSensor(metricId);
 		}
 	);
 
@@ -22,7 +22,7 @@ export default function MetricPage() {
 
 	return (
 		<>
-			<h1>Metric: {metric?.name}</h1>
+			<h1>Metric: {metric?.friendly_name}</h1>
 
 			<DateRangePicker value={timeRange} onChange={setTimeRange} />
 
@@ -30,5 +30,3 @@ export default function MetricPage() {
 		</>
 	);
 }
-
-

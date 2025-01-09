@@ -48,8 +48,8 @@ export async function getCurrentMetrics() {
 	];
 }
 
-export async function getMetric(metricId) {
-	const response = await get(`metrics/${metricId}`);
+export async function getSensor(metricId) {
+	const response = await get(`sensors/${metricId}`);
 	return await response.json();
 }
 
