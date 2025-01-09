@@ -2,12 +2,13 @@ from health_data import HealthData
 import time
 import keyboard
 import requests
-import json
+import jsons
 
 def main():
     print("\nStarting Health Simulator\n")
     mode = "normal"
-    api_endpoint = ""
+    api_post_data_endpoint = ""
+    api_post_sensor_endpoint = "http://localhost:8000/api/sensors/add_sensor_sensors_post"
     id = ""
     friendly_name = ""
     unit = ""
@@ -26,14 +27,14 @@ def main():
 
     match sensor:
         case 'O2':
-            api_endpoint = "http://localhost:8000/api/metrics/O2_level/now"
+            api_post_data_endpoint = "http://localhost:8000/api/metrics/O2_level/now"
             id = "o2_level"
             friendly_name = "O2 Level"
             unit = "%"
             value_type = int
 
         case 'heart':
-            api_endpoint = "http://localhost:8000/api/metrics/heart_rate/now"
+            api_post_data_endpoint = "http://localhost:8000/api/metrics/heart_rate/now"
             id = "heart_rate"
             friendly_name = "Heart Rate"
             unit = "bpm"
@@ -45,7 +46,7 @@ def main():
                        "value_type": value_type
                        }
 
-    response = requests.post(api_endpoint, json=json.dumps(sensor_reg_json))
+    response = requests.post(api_post_sensor_endpoint, json=jsons.dumps(sensor_reg_json))
     response.raise_for_status()
 
     try:
@@ -86,7 +87,7 @@ def main():
                 case 'heart':
                     print(f"Current Heart Rate: {value} bpm", end="\r")
 
-            response = requests.post(api_endpoint, json=value)
+            response = requests.post(api_post_data_endpoint, json=value)
             response.raise_for_status()
             time.sleep(2)
     except KeyboardInterrupt:
