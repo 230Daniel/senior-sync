@@ -10,7 +10,8 @@ todayStart.setHours(0, 0, 0, 0);
 let todayEnd = new Date();
 todayEnd.setHours(23, 59, 59, 999);
 
-export const DateRangePickerDefaultValue = [todayStart, todayEnd];
+export const DefaultStartValue = todayStart;
+export const DefaultEndValue = todayEnd;
 
 export function DateRangePicker(props) {
 	const { theme } = useContext(ThemeContext);

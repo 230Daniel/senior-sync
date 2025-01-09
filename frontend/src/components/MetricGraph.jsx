@@ -27,10 +27,6 @@ export default function MetricGraph({ metricId, timeRange }) {
 		};
 	});
 
-	if (dataToPlot.length) {
-
-	}
-
 	return <>
 		<LineChart
 			series={[{ dataKey: 'value', color: "var(--theme-col-primary)" }]}
