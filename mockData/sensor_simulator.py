@@ -8,7 +8,7 @@ def main():
     print("\nStarting Health Simulator\n")
     mode = "normal"
     api_post_data_endpoint = ""
-    api_post_sensor_endpoint = "http://localhost:8000/api/sensors/add_sensor_sensors_post"
+    api_post_sensor_endpoint = "http://localhost:8000/api/sensors"
     id = ""
     friendly_name = ""
     unit = ""
@@ -27,27 +27,29 @@ def main():
 
     match sensor:
         case 'O2':
-            api_post_data_endpoint = "http://localhost:8000/api/metrics/O2_level/now"
+            api_post_data_endpoint = "http://localhost:8000/api/metrics/o2_level/now"
             id = "o2_level"
             friendly_name = "O2 Level"
             unit = "%"
-            value_type = int
+            value_type = "int"
 
         case 'heart':
             api_post_data_endpoint = "http://localhost:8000/api/metrics/heart_rate/now"
             id = "heart_rate"
             friendly_name = "Heart Rate"
             unit = "bpm"
-            value_type = int
+            value_type = "int"
 
-    sensor_reg_json = {"_id": id,
-                       "friendly_name": friendly_name,
-                       "unit": unit,
-                       "value_type": value_type
-                       }
-
-    response = requests.post(api_post_sensor_endpoint, json=jsons.dumps(sensor_reg_json))
-    response.raise_for_status()
+    try:
+        response = requests.post(api_post_sensor_endpoint, json={
+  "_id": id,
+  "friendly_name": friendly_name,
+  "unit": unit,
+  "value_type": value_type
+})
+        response.raise_for_status()
+    except:
+        pass
 
     try:
         while True:
