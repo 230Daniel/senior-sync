@@ -45,7 +45,7 @@ These steps will start the backend up locally so that you can interact with it o
 
 5. Install packages with `pip install -r requirements.txt`. If you get an error about Microsoft Visual C++ not being installed, follow the steps in this answer: https://stackoverflow.com/a/64262038.
 
-6. Run `fastapi dev main.py` to start up the backend on http://127.0.0.1:8000.
+6. Run `fastapi dev` to start up the backend on http://127.0.0.1:8000.
 
 ### Setting up Mongo Database on Windows
 

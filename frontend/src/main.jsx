@@ -1,20 +1,21 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { QueryClientProvider } from 'react-query';
 import { BrowserRouter, Routes, Route } from "react-router";
+
+import { ThemeProvider } from './layout/ThemeSelector.jsx';
+import { QueryClient } from './api/api.js';
+
+import './index.css';
 
 import Home from './pages/Home.jsx';
 import Layout from './layout/Layout.jsx';
-
-import './index.css';
 import Metric from './pages/Metric.jsx';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ThemeProvider } from './layout/ThemeSelector.jsx';
 
-const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={QueryClient}>
       <ThemeProvider>
         <BrowserRouter>
           <Routes>

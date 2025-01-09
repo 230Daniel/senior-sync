@@ -16,9 +16,7 @@ export default function MetricPage() {
 		<>
 			<h1>Metric: {metricId}</h1>
 
-			<DateRangePicker
-				value={timeRange}
-				onChange={setTimeRange} />
+			<DateRangePicker value={timeRange} onChange={setTimeRange} />
 
 			<MetricGraph metricId={metricId} timeRange={timeRange} />
 		</>
@@ -26,9 +24,12 @@ export default function MetricPage() {
 }
 
 function MetricGraph({ metricId, timeRange }) {
-	const { data, error, isLoading } = useQuery([metricId, timeRange], async () => {
-		return await getMetricHistory(metricId, timeRange[0], timeRange[1]);
-	});
+	const { data, error, isLoading } = useQuery(
+		[metricId, timeRange],
+		async () => {
+			return await getMetricHistory(metricId, timeRange[0], timeRange[1]);
+		}
+	);
 
 	if (isLoading) {
 		return "loading";

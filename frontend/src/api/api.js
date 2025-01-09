@@ -1,8 +1,22 @@
+import { QueryClient as ReactQueryClient } from "react-query";
+
 // The absolute path to the backend. If APP_BACKEND is /api/ this will become https://current.domain/api/.
 export const Backend = new URL(__APP_BACKEND, window.location.href).href;
 
-function get(endpoint) {
-	return fetch(new URL(endpoint, Backend));
+export const QueryClient = new ReactQueryClient({
+	defaultOptions: {
+		queries: {
+			retry: false
+		},
+	},
+});
+
+async function get(endpoint) {
+	const response = await fetch(new URL(endpoint, Backend));
+	if (!response.ok) {
+		throw new Error(`HTTP response code ${response.status} for endpoint ${endpoint}.`);
+	}
+	return response;
 }
 
 export async function getRoot() {
