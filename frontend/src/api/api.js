@@ -33,3 +33,15 @@ export async function getCurrentMetrics() {
 		{ "id": "vibe-index", "name": "Vibe Index", "value": "No Data", "unit": "", "status": "gray" },
 	];
 }
+
+export async function getMetricHistory(metricId, startTime, endTime) {
+	let query = `?start_time=${startTime.toISOString()}`;
+	if (endTime) {
+		query += `&end_time=${endTime?.toISOString()}`;
+	}
+
+	const response = await get(
+		`metrics/${metricId}/history${query}`
+	);
+	return await response.json();
+}
