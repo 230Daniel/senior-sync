@@ -2,7 +2,6 @@ from health_data import HealthData
 import time
 import keyboard
 import requests
-import jsons
 
 def main():
     print("\nStarting Health Simulator\n")
