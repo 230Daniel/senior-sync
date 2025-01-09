@@ -6,9 +6,10 @@ export const Backend = new URL(__APP_BACKEND, window.location.href).href;
 export const QueryClient = new ReactQueryClient({
 	defaultOptions: {
 		queries: {
-			retry: false
+			retry: false,
+			refetchOnWindowFocus: false
 		},
-	},
+	}
 });
 
 async function get(endpoint) {

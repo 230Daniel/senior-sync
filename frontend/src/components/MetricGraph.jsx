@@ -9,6 +9,9 @@ export default function MetricGraph({ metricId, timeRange }) {
 		[metricId, timeRange],
 		async () => {
 			return await getMetricHistory(metricId, timeRange[0], timeRange[1]);
+		},
+		{
+			refetchInterval: 10000
 		}
 	);
 

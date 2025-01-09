@@ -63,7 +63,7 @@ export default function MetricPage() {
 
 	return (
 		<>
-			<h1>Metric: {metric.friendly_name}</h1>
+			<h1>{metric.friendly_name}</h1>
 
 			<DateRangePicker value={timeRange} onChange={setTimeRange} />
 
