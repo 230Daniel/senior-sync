@@ -2,27 +2,44 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { MdLightMode, MdDarkMode, MdOutlineContrast } from "react-icons/md";
 import { useCookies } from "react-cookie";
+import { createTheme } from "@mui/material";
 
 import classes from "./themes.module.css";
 
+
 export const Themes = [
 	{
-		"name": "Dark Mode",
-		"className": classes.dark,
-		"icon": MdDarkMode,
-		"rsuiteId": "dark"
+		name: "Dark Mode",
+		className: classes.dark,
+		icon: MdDarkMode,
+		rsuiteId: "dark",
+		mui: createTheme({
+			palette: {
+				mode: "dark"
+			}
+		})
 	},
 	{
-		"name": "Light Mode",
-		"className": classes.light,
-		"icon": MdLightMode,
-		"rsuiteId": "light"
+		name: "Light Mode",
+		className: classes.light,
+		icon: MdLightMode,
+		rsuiteId: "light",
+		mui: createTheme({
+			palette: {
+				mode: "light"
+			}
+		})
 	},
 	{
-		"name": "High Contrast Mode",
-		"className": classes.highContrast,
-		"icon": MdOutlineContrast,
-		"rsuiteId": "high-contrast"
+		name: "High Contrast Mode",
+		className: classes.highContrast,
+		icon: MdOutlineContrast,
+		rsuiteId: "high-contrast",
+		mui: createTheme({
+			palette: {
+				mode: "dark"
+			}
+		})
 	}
 ];
 

@@ -12,10 +12,6 @@ todayEnd.setHours(23, 59, 59, 999);
 
 export const DateRangePickerDefaultValue = [todayStart, todayEnd];
 
-function shouldDisableDate(date) {
-	return date > todayEnd;
-}
-
 export function DateRangePicker(props) {
 	const { theme } = useContext(ThemeContext);
 
@@ -24,10 +20,9 @@ export function DateRangePicker(props) {
 			<RSuiteDateRangePicker
 				showOneCalendar={true}
 				format="dd/MM/yyyy HH:mm"
-				shouldDisableDate={(shouldDisableDate)}
+				shouldDisableDate={((date) => { return date > todayEnd; })}
 				{...props}
 			/>
 		</CustomProvider>
-
 	</>;
 }
