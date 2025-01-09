@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 import uvicorn
+import logging
+
 
 from .routers import sensors, metrics
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(root_path="/api", redirect_slashes=False)
 

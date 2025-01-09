@@ -33,6 +33,11 @@ services:
             - 'mongo'
         environment:
             MONGO_HOST: mongodb://mongo:27017
+            EMAIL_SENDER: senior-sync@amazon-ses.utili.xyz
+            EMAIL_RECIPIENT: daniel.baynton.026@cranfield.ac.uk
+            AWS_DEFAULT_REGION: eu-west-2
+            AWS_ACCESS_KEY_ID: null
+            AWS_SECRET_ACCESS_KEY: null
         networks:
             - mongo
             - nginx
