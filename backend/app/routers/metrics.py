@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import attrgetter
 from typing import Any, List
 from fastapi import APIRouter, Body, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
@@ -64,4 +65,6 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
         raise HTTPException(status.HTTP_404_NOT_FOUND,
                             f"Sensor {sensor_id} not found.")
 
-    return database.get_datapoints_by_time(sensor, start_time, end_time)
+    data_points = database.get_datapoints_by_time(sensor, start_time, end_time)
+    data_points.sort(key=attrgetter("timestamp"))
+    return data_points
