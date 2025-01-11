@@ -51,23 +51,24 @@ class HeartRateService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event != null && event.sensor.type == Sensor.TYPE_HEART_RATE) {
-
-            if (event.accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
-                sendHeartRateBroadcast("bad HR ${event.accuracy}")
-            }
-
-            val heartRate = event.values[0]
-            val timestamp = event.timestamp
-
-            // Send heart rate data to server and update last sent time
-            postHeartRate(heartRate, timestamp)
-
-            // Update the notification with the heart rate
-            val notification = buildNotification("Heart Rate: $heartRate bpm")
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.notify(1, notification)
+        if (event == null || event.sensor.type != Sensor.TYPE_HEART_RATE) {
+            return
         }
+
+        if (event.accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
+            sendHeartRateBroadcast("bad HR ${event.accuracy}")
+            sendNotification("Bad HR ${event.accuracy}")
+            return
+        }
+
+        val heartRate = event.values[0]
+        val timestamp = event.timestamp
+
+        // Send heart rate data to server and update last sent time
+        postHeartRate(heartRate, timestamp)
+
+        // Update the notification with the heart rate
+        sendNotification("HR $heartRate BPM")
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -76,25 +77,6 @@ class HeartRateService : Service(), SensorEventListener {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null // Not used for a foreground service
-    }
-
-    private fun buildNotification(content: String): Notification {
-        return NotificationCompat.Builder(this, "heart_rate_channel")
-            .setContentTitle("Heart Rate Monitor")
-            .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_menu_info_details)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
-    }
-
-    private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            "heart_rate_channel",
-            "Senior Sync HR Monitor",
-            NotificationManager.IMPORTANCE_LOW
-        )
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
     }
 
     private fun postHeartRate(heartRate: Float, timestamp: Long) {
@@ -145,13 +127,40 @@ class HeartRateService : Service(), SensorEventListener {
         return dateFormat.format(date)
     }
 
+    private fun buildNotification(content: String): Notification {
+        return NotificationCompat.Builder(this, "heart_rate_channel")
+            .setContentTitle("Heart Rate Monitor")
+            .setContentText(content)
+            .setSmallIcon(android.R.drawable.ic_menu_info_details)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+    }
+
+    private fun createNotificationChannel() {
+        val channel = NotificationChannel(
+            "heart_rate_channel",
+            "Senior Sync HR Monitor",
+            NotificationManager.IMPORTANCE_LOW
+        )
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun sendNotification(message: String) {
+        val notification = buildNotification(message)
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.notify(1, notification)
+    }
+
     private fun sendHeartRateBroadcast(message: String) {
+        if (!AppState.isAppVisible) { return }
         val intent = Intent("com.seniorsync.supersoaker.HEART_RATE_UPDATE")
         intent.putExtra("heartRate", message)
         sendBroadcast(intent)
     }
 
     private fun sendStatusBroadcast(status: String) {
+        if (!AppState.isAppVisible) { return }
         val intent = Intent("com.seniorsync.supersoaker.STATUS_UPDATE")
         intent.putExtra("status", status)
         sendBroadcast(intent)

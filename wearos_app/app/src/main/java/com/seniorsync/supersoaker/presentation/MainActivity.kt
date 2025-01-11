@@ -64,18 +64,36 @@ class MainActivity : Activity() {
 
         val intent = Intent(this, HeartRateService::class.java)
         startForegroundService(intent)
+    }
 
-        // Register the BroadcastReceiver to listen for heart rate updates
+    override fun onStart() {
+        super.onStart()
+
         val heartRateFilter = IntentFilter("com.seniorsync.supersoaker.HEART_RATE_UPDATE")
-        registerReceiver(heartRateReceiver, heartRateFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(heartRateReceiver, heartRateFilter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(heartRateReceiver, heartRateFilter)
+        }
 
         val statusFilter = IntentFilter("com.seniorsync.supersoaker.STATUS_UPDATE")
-        registerReceiver(statusReceiver, statusFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(statusReceiver, statusFilter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(statusReceiver, statusFilter)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unregisterReceiver(heartRateReceiver)
+        unregisterReceiver(statusReceiver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Unregister the BroadcastReceiver when the Activity is destroyed
+
         unregisterReceiver(heartRateReceiver)
         unregisterReceiver(statusReceiver)
     }
