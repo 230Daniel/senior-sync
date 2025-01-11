@@ -10,6 +10,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.IBinder
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import okhttp3.Call
 import okhttp3.Callback
@@ -19,13 +20,13 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class HeartRateService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var heartRateSensor: Sensor? = null
-
-    private var lastSentTime: Long = 0 // Store the last time heart rate was sent
-    private val SEND_INTERVAL: Long = 5000 // 5 seconds in milliseconds
 
     override fun onCreate() {
         super.onCreate()
@@ -51,27 +52,26 @@ class HeartRateService : Service(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null && event.sensor.type == Sensor.TYPE_HEART_RATE) {
-            val heartRate = event.values[0]
 
-            sendHeartRateBroadcast(heartRate)
-
-            // Check if 5 seconds have passed since the last sent time
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastSentTime >= SEND_INTERVAL) {
-                // Send heart rate data to server and update last sent time
-                postHeartRate(heartRate)
-                lastSentTime = currentTime
-
-                // Update the notification with the heart rate
-                val notification = buildNotification("Heart Rate: $heartRate bpm")
-                val notificationManager = getSystemService(NotificationManager::class.java)
-                notificationManager.notify(1, notification)
+            if (event.accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
+                sendHeartRateBroadcast("bad HR ${event.accuracy}")
             }
+
+            val heartRate = event.values[0]
+            val timestamp = event.timestamp
+
+            // Send heart rate data to server and update last sent time
+            postHeartRate(heartRate, timestamp)
+
+            // Update the notification with the heart rate
+            val notification = buildNotification("Heart Rate: $heartRate bpm")
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.notify(1, notification)
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Handle changes in sensor accuracy if needed
+        // unused
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -97,9 +97,14 @@ class HeartRateService : Service(), SensorEventListener {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun postHeartRate(heartRate: Float) {
-        val url = "https://utili.xyz:8443/api/metrics/heart-rate/now"
-        val jsonBody = "$heartRate"
+    private fun postHeartRate(heartRate: Float, timestamp: Long) {
+        val url = "https://utili.xyz:8443/api/metrics/heart-rate"
+        val jsonBody = """
+            {
+                "value": $heartRate,
+                "timestamp": ${convertSensorTimestampToISO(timestamp)}
+            }
+        """.trimIndent()
 
         val requestBody = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaType())
         val request = Request.Builder()
@@ -124,9 +129,25 @@ class HeartRateService : Service(), SensorEventListener {
         })
     }
 
-    private fun sendHeartRateBroadcast(heartRate: Float) {
+    private fun convertSensorTimestampToISO(eventTimestamp: Long): String {
+        // Get the current wall-clock time in milliseconds
+        val currentWallClockMillis = System.currentTimeMillis()
+
+        // Get the elapsed time in nanoseconds since boot
+        val elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
+
+        // Calculate the event's wall-clock timestamp in milliseconds
+        val eventWallClockMillis = currentWallClockMillis + (eventTimestamp - elapsedRealtimeNanos) / 1_000_000L
+
+        // Convert to ISO 8601 format
+        val date = Date(eventWallClockMillis)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault())
+        return dateFormat.format(date)
+    }
+
+    private fun sendHeartRateBroadcast(message: String) {
         val intent = Intent("com.seniorsync.supersoaker.HEART_RATE_UPDATE")
-        intent.putExtra("heartRate", heartRate)
+        intent.putExtra("heartRate", message)
         sendBroadcast(intent)
     }
 

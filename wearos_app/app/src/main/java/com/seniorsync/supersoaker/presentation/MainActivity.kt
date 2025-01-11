@@ -30,11 +30,8 @@ class MainActivity : Activity() {
     // Define a BroadcastReceiver to handle heart rate updates
     private val heartRateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val heartRate = intent?.getFloatExtra("heartRate", -1f)
-            if (heartRate != null && heartRate >= 0) {
-                // Update the TextView with the new heart rate
-                heartRateTextView.text = "$heartRate BPM"
-            }
+            val heartRate = intent?.getStringExtra("heartRate")
+            heartRateTextView.text = heartRate
         }
     }
 
@@ -70,18 +67,10 @@ class MainActivity : Activity() {
 
         // Register the BroadcastReceiver to listen for heart rate updates
         val heartRateFilter = IntentFilter("com.seniorsync.supersoaker.HEART_RATE_UPDATE")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(heartRateReceiver, heartRateFilter, Context.RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(heartRateReceiver, heartRateFilter)
-        }
+        registerReceiver(heartRateReceiver, heartRateFilter)
 
         val statusFilter = IntentFilter("com.seniorsync.supersoaker.STATUS_UPDATE")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(statusReceiver, statusFilter, Context.RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(statusReceiver, statusFilter)
-        }
+        registerReceiver(statusReceiver, statusFilter)
     }
 
     override fun onDestroy() {
