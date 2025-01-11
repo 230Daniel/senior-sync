@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class BaseDataPointModel(BaseModel):
     timestamp: datetime
     value: Union[int, float, str]
+    colour: str
 
 
 class IntDataPointModel(BaseDataPointModel):

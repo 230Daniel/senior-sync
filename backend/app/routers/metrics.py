@@ -21,9 +21,15 @@ async def record_now(sensor_id: str, value: Any = Body()):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
     try:
+        # Assign the correct colour status to the data point depending on the sensors colour status boundaries
+        # TODO: ^
+        for boundary in sensor.colour_status_boundaries:
+            if boundary.low_value <= value <= boundary.high_value:
+                colour = boundary.colour
+                break
         # Look up the appropriate DataPointModel type to use for this sensor and instantiate it.
         data_point = DataPointModels[sensor.value_type](
-            timestamp=datetime.now(), value=value)
+            timestamp=datetime.now(), value=value, colour=)
     except ValidationError as exc:
         # The user gave us the wrong type of data in `value`, raise it as a RequestValidationError to pass on the message.
         raise RequestValidationError(exc.errors())
