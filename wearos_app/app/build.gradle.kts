@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.seniorsync.supersoaker"
-        minSdk = 30
-        targetSdk = 35
+        minSdk = 26
+        targetSdk = 26
         versionCode = 1
         versionName = "1.0"
 
