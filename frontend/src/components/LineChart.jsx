@@ -1,4 +1,5 @@
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useState } from "react";
+import { CartesianGrid, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 function getNumberOfTicksWithDivisor(start, end, divisor) {
 	return (end - start) / divisor + 1;
@@ -30,7 +31,7 @@ function getTicks(start, end, minTicks, maxTicks) {
 	];
 
 	let ticks;
-	while (true) {
+	for (let i = 0; i < multipliers.length; i++) {
 		ticks = getNumberOfTicksWithDivisor(start, end, sum(multipliers));
 		if (ticks >= minTicks) break;
 
@@ -38,19 +39,15 @@ function getTicks(start, end, minTicks, maxTicks) {
 		multipliers.pop();
 	}
 
-	while (true) {
-		ticks = getNumberOfTicksWithDivisor(start, end, multipliers.reduce((a, b) => a * b, 1));
-		if (ticks <= maxTicks) break;
-
-		// Decrease number of ticks by adding one to the top multiplier.
+	do {
 		multipliers[multipliers.length - 1] = multipliers[multipliers.length - 1] + 1;
-	}
+	} while (getNumberOfTicksWithDivisor(start, end, sum(multipliers)) > maxTicks);
 
 	const divisor = sum(multipliers);
 	return [getTicksWithDivisor(start, end, divisor), divisor];
 }
 
-export default function MyLineChart({ data, timeRange }) {
+export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 	const start = timeRange[0].getTime();
 	const end = timeRange[1].getTime();
 
@@ -59,7 +56,10 @@ export default function MyLineChart({ data, timeRange }) {
 	const CustomizedTick = ({ x, y, stroke, payload }) => {
 		const date = new Date(payload.value);
 
-		const newDay = Math.floor((payload.value - start) / 8.64e+7) > Math.floor(((payload.value - tickDivisor) - start) / 8.64e+7);
+		const previousTickDay = new Date(payload.value - tickDivisor).toDateString();
+		const thisTickDay = new Date(payload.value).toDateString();
+		const newDay = thisTickDay != previousTickDay;
+
 		const showDate = payload.value == start || payload.value == end || newDay;
 
 		const showSeconds = date.getSeconds() > 0;
@@ -90,10 +90,31 @@ export default function MyLineChart({ data, timeRange }) {
 		);
 	};
 
+	const [selectionLeft, setSelectionLeft] = useState(null);
+	const [selectionRight, setSelectionRight] = useState(null);
+
+	const [timeRangeHistory, setTimeRangeHistory] = useState([]);
 
 	return <>
 		<ResponsiveContainer width="100%" height={400}>
-			<LineChart data={data}>
+			<LineChart
+				data={data}
+				onMouseDown={(chart, event) => {
+					if (event.button == 0) {
+						setSelectionLeft(chart.activeLabel);
+					} else if (event.button == 2) {
+						// restore history
+					}
+				}}
+				onMouseMove={(chart) => {
+					if (selectionLeft) setSelectionRight(chart.activeLabel);
+				}}
+				onMouseUp={() => {
+					setSelectionLeft(null);
+					setSelectionRight(null);
+					if (!selectionLeft || !selectionRight || selectionLeft >= selectionRight) return;
+					onTimeRangeSelected([new Date(selectionLeft), new Date(selectionRight)]);
+				}}>
 				<CartesianGrid strokeDasharray="4" horizontal={false} verticalValues={ticks} />
 				<Line type="monotone" dataKey="value" dot={false} />
 				<XAxis
@@ -105,6 +126,10 @@ export default function MyLineChart({ data, timeRange }) {
 					interval={0} />
 				<YAxis />
 				<Tooltip />
+
+				{selectionLeft && selectionRight && selectionRight > selectionLeft &&
+					<ReferenceArea yAxisId="0" x1={selectionLeft} x2={selectionRight} stroke="red" strokeOpacity={0.3} />
+				}
 			</LineChart>
 		</ResponsiveContainer>
 	</>;

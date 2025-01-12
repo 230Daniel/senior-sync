@@ -6,7 +6,7 @@ import classes from "./metricGraph.module.css";
 import LineChart from "./LineChart";
 
 
-export default function MetricGraph({ metricId, valueType, timeRange }) {
+export default function MetricGraph({ metricId, valueType, timeRange, onTimeRangeSelected }) {
 	const { data: dataPoints, error, isLoading } = useQuery(
 		[metricId, timeRange],
 		async () => {
@@ -35,7 +35,7 @@ export default function MetricGraph({ metricId, valueType, timeRange }) {
 
 	if (valueType == "int" || valueType == "float") {
 		return <>
-			<LineChart data={dataToPlot} timeRange={timeRange} />
+			<LineChart data={dataToPlot} timeRange={timeRange} onTimeRangeSelected={onTimeRangeSelected} />
 		</>;
 	}
 
