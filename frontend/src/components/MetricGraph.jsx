@@ -4,13 +4,28 @@ import { getMetricHistory } from "../api/api";
 
 import classes from "./metricGraph.module.css";
 import LineChart from "./LineChart";
+import { useEffect, useState } from "react";
 
 
 export default function MetricGraph({ metricId, valueType, timeRange, onTimeRangeSelected }) {
+
+	const [maxTimeRange, setMaxTimeRange] = useState(timeRange);
+
+	useEffect(() => {
+		const newMaxTimeRange = [
+			timeRange[0] < maxTimeRange[0] ? timeRange[0] : maxTimeRange[0],
+			timeRange[1] > maxTimeRange[1] ? timeRange[1] : maxTimeRange[1]
+		];
+
+		if (JSON.stringify(newMaxTimeRange) != JSON.stringify(maxTimeRange)) {
+			setMaxTimeRange(timeRange);
+		}
+	}, [timeRange]);
+
 	const { data: dataPoints, error, isLoading } = useQuery(
-		[metricId, timeRange],
+		[metricId, maxTimeRange],
 		async () => {
-			return await getMetricHistory(metricId, timeRange[0], timeRange[1]);
+			return await getMetricHistory(metricId, maxTimeRange[0], maxTimeRange[1]);
 		},
 		{
 			refetchInterval: 10000

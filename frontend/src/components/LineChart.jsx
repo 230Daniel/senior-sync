@@ -95,15 +95,25 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 
 	const [timeRangeHistory, setTimeRangeHistory] = useState([]);
 
+	const includedData = data.filter((datapoint) => datapoint.timestamp >= start && datapoint.timestamp <= end);
+
 	return <>
+		<p>
+			Left click and drag to zoom in, right click to zoom back out.
+		</p>
 		<ResponsiveContainer width="100%" height={400}>
 			<LineChart
-				data={data}
+				data={includedData}
 				onMouseDown={(chart, event) => {
 					if (event.button == 0) {
 						setSelectionLeft(chart.activeLabel);
 					} else if (event.button == 2) {
-						// restore history
+						if (timeRangeHistory.length > 0) {
+							const newTimeRange = timeRangeHistory[0];
+							setTimeRangeHistory(timeRangeHistory.slice(1));
+							onTimeRangeSelected(newTimeRange);
+							return true;
+						}
 					}
 				}}
 				onMouseMove={(chart) => {
@@ -113,10 +123,14 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 					setSelectionLeft(null);
 					setSelectionRight(null);
 					if (!selectionLeft || !selectionRight || selectionLeft >= selectionRight) return;
-					onTimeRangeSelected([new Date(selectionLeft), new Date(selectionRight)]);
-				}}>
+
+					setTimeRangeHistory([timeRange, ...timeRangeHistory]);
+					const newTimeRange = [new Date(selectionLeft), new Date(selectionRight)];
+					onTimeRangeSelected(newTimeRange);
+				}}
+				onContextMenu={(chart, event) => { event.preventDefault(); }}>
 				<CartesianGrid strokeDasharray="4" horizontal={false} verticalValues={ticks} />
-				<Line type="monotone" dataKey="value" dot={false} />
+				<Line type="monotone" dataKey="value" dot={includedData.length <= 128} animationDuration={300} />
 				<XAxis
 					dataKey="timestamp"
 					type="number"
