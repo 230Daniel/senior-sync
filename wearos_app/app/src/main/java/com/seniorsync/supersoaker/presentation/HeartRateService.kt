@@ -56,13 +56,15 @@ class HeartRateService : Service(), SensorEventListener {
         }
 
         if (event.accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
-            sendHeartRateBroadcast("bad HR ${event.accuracy}")
+            sendHeartRateBroadcast("bad accuracy ${event.accuracy}")
             sendNotification("Bad HR ${event.accuracy}")
             return
         }
 
         val heartRate = event.values[0]
         val timestamp = event.timestamp
+
+        sendHeartRateBroadcast("$heartRate BPM")
 
         // Send heart rate data to server and update last sent time
         postHeartRate(heartRate, timestamp)
@@ -84,7 +86,7 @@ class HeartRateService : Service(), SensorEventListener {
         val jsonBody = """
             {
                 "value": $heartRate,
-                "timestamp": ${convertSensorTimestampToISO(timestamp)}
+                "timestamp": "${convertSensorTimestampToISO(timestamp)}"
             }
         """.trimIndent()
 
@@ -97,14 +99,15 @@ class HeartRateService : Service(), SensorEventListener {
         OkHttpClient().newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
+                sendStatusBroadcast("send fail")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    println("Heart rate sent successfully: ${response.body?.string()}")
+                    println("Heart rate sent successfully")
                     sendStatusBroadcast("sent $heartRate")
                 } else {
-                    println("Failed to send heart rate: ${response.code}")
+                    println("Failed to send heart rate: ${response.code} ${response.body?.string()}")
                     sendStatusBroadcast("send bad: ${response.code}")
                 }
             }

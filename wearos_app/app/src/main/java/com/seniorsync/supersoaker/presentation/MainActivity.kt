@@ -69,6 +69,8 @@ class MainActivity : Activity() {
     override fun onStart() {
         super.onStart()
 
+        AppState.isAppVisible = true
+
         val heartRateFilter = IntentFilter("com.seniorsync.supersoaker.HEART_RATE_UPDATE")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(heartRateReceiver, heartRateFilter, Context.RECEIVER_EXPORTED)
@@ -86,6 +88,8 @@ class MainActivity : Activity() {
 
     override fun onStop() {
         super.onStop()
+
+        AppState.isAppVisible = false
 
         unregisterReceiver(heartRateReceiver)
         unregisterReceiver(statusReceiver)
