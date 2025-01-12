@@ -125,10 +125,12 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 					ticks={ticks}
 					interval={0} />
 				<YAxis />
-				<Tooltip />
+				<Tooltip
+					animationDuration={0}
+					labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }} />
 
 				{selectionLeft && selectionRight && selectionRight > selectionLeft &&
-					<ReferenceArea yAxisId="0" x1={selectionLeft} x2={selectionRight} stroke="red" strokeOpacity={0.3} />
+					<ReferenceArea yAxisId="0" x1={selectionLeft} x2={selectionRight} />
 				}
 			</LineChart>
 		</ResponsiveContainer>
