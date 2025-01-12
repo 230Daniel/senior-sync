@@ -5,7 +5,6 @@ import { getMetricHistory } from "../api/api";
 import classes from "./metricGraph.module.css";
 import LineChart from "./LineChart";
 import { useEffect, useState } from "react";
-import { ObjectId } from "bson";
 
 
 export default function MetricGraph({ metric, valueType, timeRange, onTimeRangeSelected }) {
@@ -56,7 +55,7 @@ export default function MetricGraph({ metric, valueType, timeRange, onTimeRangeS
 			dataToPlot.push({
 				timestamp: new Date((timestamp.getTime() + previousTimestamp.getTime()) / 2),
 				value: null,
-				id: new ObjectId().toString()
+				id: dataToPlot.length
 			});
 		}
 
