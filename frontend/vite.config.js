@@ -8,6 +8,11 @@ export default defineConfig(({ mode }) => {
         plugins: [react()],
         define: {
             __APP_BACKEND: JSON.stringify(env.APP_BACKEND),
-        }
+        },
+        optimizeDeps: {
+            esbuildOptions: {
+                target: 'esnext'
+            }
+        },
     };
 });

@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import classes from "./lineChart.module.css";
+
 function getNumberOfTicksWithDivisor(start, end, divisor) {
-	return (end - start) / divisor + 1;
+	return Math.floor((end - start) / divisor) + 1;
 }
 
 function getTicksWithDivisor(start, end, divisor) {
 	const ticks = Array.from(
 		{ length: getNumberOfTicksWithDivisor(start, end, divisor) },
 		(value, index) => start + index * divisor);
+
 	ticks.push(end);
 	return ticks;
 }
@@ -30,18 +33,18 @@ function getTicks(start, end, minTicks, maxTicks) {
 		365 // years
 	];
 
-	let ticks;
-	for (let i = 0; i < multipliers.length; i++) {
-		ticks = getNumberOfTicksWithDivisor(start, end, sum(multipliers));
-		if (ticks >= minTicks) break;
+	while (getNumberOfTicksWithDivisor(start, end, sum(multipliers)) < minTicks) {
+		if (multipliers.length == 1) break;
 
 		// Increase number of ticks by removing a multiplier.
 		multipliers.pop();
 	}
 
-	do {
+	multipliers[multipliers.length - 1] = multipliers[multipliers.length - 1] + 1;
+
+	while (getNumberOfTicksWithDivisor(start, end, sum(multipliers)) > maxTicks) {
 		multipliers[multipliers.length - 1] = multipliers[multipliers.length - 1] + 1;
-	} while (getNumberOfTicksWithDivisor(start, end, sum(multipliers)) > maxTicks);
+	}
 
 	const divisor = sum(multipliers);
 	return [getTicksWithDivisor(start, end, divisor), divisor];
@@ -76,7 +79,7 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 
 		return (
 			<g transform={`translate(${x},${y})`}>
-				<text x={0} y={0} dy={16} fill="#666">
+				<text x={0} y={0} dy={16} fill="var(--theme-col-chart-axis)">
 					<tspan textAnchor="middle" x="0">
 						{lineOne}
 					</tspan>
@@ -101,53 +104,63 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 		<p>
 			Left click and drag to zoom in, right click to zoom back out.
 		</p>
-		<ResponsiveContainer width="100%" height={400}>
-			<LineChart
-				data={includedData}
-				onMouseDown={(chart, event) => {
-					if (event.button == 0) {
-						setSelectionLeft(chart.activeLabel);
-					} else if (event.button == 2) {
-						if (timeRangeHistory.length > 0) {
-							const newTimeRange = timeRangeHistory[0];
-							setTimeRangeHistory(timeRangeHistory.slice(1));
-							onTimeRangeSelected(newTimeRange);
-							return true;
+		<div className={classes.lineChart}>
+			<ResponsiveContainer width="100%" height={400}>
+				<LineChart
+					data={includedData}
+					onMouseDown={(chart, event) => {
+						if (event.button == 0) {
+							setSelectionLeft(chart.activeLabel);
+						} else if (event.button == 2) {
+							if (timeRangeHistory.length > 0) {
+								const newTimeRange = timeRangeHistory[0];
+								setTimeRangeHistory(timeRangeHistory.slice(1));
+								onTimeRangeSelected(newTimeRange);
+								return true;
+							}
 						}
+					}}
+					onMouseMove={(chart) => {
+						if (selectionLeft) setSelectionRight(chart.activeLabel);
+					}}
+					onMouseUp={() => {
+						setSelectionLeft(null);
+						setSelectionRight(null);
+						if (!selectionLeft || !selectionRight || selectionLeft >= selectionRight) return;
+
+						setTimeRangeHistory([timeRange, ...timeRangeHistory]);
+						const newTimeRange = [new Date(selectionLeft), new Date(selectionRight)];
+						onTimeRangeSelected(newTimeRange);
+					}}
+					onContextMenu={(chart, event) => { event.preventDefault(); }}>
+					<CartesianGrid strokeDasharray="4" horizontal={false} verticalValues={ticks.slice(1)} />
+					<Line
+						type="stepAfter"
+						dataKey="value"
+						connectNulls={false}
+						dot={includedData.length <= 128}
+						animationDuration={300}
+					/>
+					<XAxis
+						dataKey="timestamp"
+						type="number"
+						domain={[start, end]}
+						tick={CustomizedTick}
+						ticks={ticks}
+						interval={0}
+						stroke="var(--theme-col-chart-axis)"
+						opacity="1"
+					/>
+					<YAxis stroke="var(--theme-col-chart-axis)" />
+					<Tooltip
+						animationDuration={0}
+						labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }} />
+
+					{selectionLeft && selectionRight && selectionRight > selectionLeft &&
+						<ReferenceArea yAxisId="0" x1={selectionLeft} x2={selectionRight} />
 					}
-				}}
-				onMouseMove={(chart) => {
-					if (selectionLeft) setSelectionRight(chart.activeLabel);
-				}}
-				onMouseUp={() => {
-					setSelectionLeft(null);
-					setSelectionRight(null);
-					if (!selectionLeft || !selectionRight || selectionLeft >= selectionRight) return;
-
-					setTimeRangeHistory([timeRange, ...timeRangeHistory]);
-					const newTimeRange = [new Date(selectionLeft), new Date(selectionRight)];
-					onTimeRangeSelected(newTimeRange);
-				}}
-				onContextMenu={(chart, event) => { event.preventDefault(); }}>
-				<CartesianGrid strokeDasharray="4" horizontal={false} verticalValues={ticks} />
-				<Line type="monotone" dataKey="value" dot={includedData.length <= 128} animationDuration={300} />
-				<XAxis
-					dataKey="timestamp"
-					type="number"
-					domain={[start, end]}
-					tick={CustomizedTick}
-					ticks={ticks}
-					interval={0} />
-				<YAxis />
-				<Tooltip
-					animationDuration={0}
-					labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }} />
-
-				{selectionLeft && selectionRight && selectionRight > selectionLeft &&
-					<ReferenceArea yAxisId="0" x1={selectionLeft} x2={selectionRight} />
-				}
-			</LineChart>
-		</ResponsiveContainer>
+				</LineChart>
+			</ResponsiveContainer>
+		</div>
 	</>;
 };
-

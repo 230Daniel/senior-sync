@@ -5,6 +5,7 @@ import { getMetricHistory } from "../api/api";
 import classes from "./metricGraph.module.css";
 import LineChart from "./LineChart";
 import { useEffect, useState } from "react";
+import { ObjectId } from "bson";
 
 
 export default function MetricGraph({ metricId, valueType, timeRange, onTimeRangeSelected }) {
@@ -40,13 +41,33 @@ export default function MetricGraph({ metricId, valueType, timeRange, onTimeRang
 		return "error";
 	}
 
-	const dataToPlot = dataPoints.map((dataPoint) => {
-		return {
-			timestamp: new Date(dataPoint.timestamp).getTime(),
+	const dataToPlot = new Array(0);
+	let previousTimestamp = null;
+
+	for (const dataPoint of dataPoints) {
+		const timestamp = new Date(dataPoint.timestamp);
+
+		const timeDifference = previousTimestamp
+			? timestamp.getTime() - previousTimestamp.getTime()
+			: 0;
+
+		// Insert null point between this and the previous datapoint to create a gap.
+		if (timeDifference >= 60000) {
+			dataToPlot.push({
+				timestamp: new Date((timestamp.getTime() + previousTimestamp.getTime()) / 2),
+				value: null,
+				id: new ObjectId().toString()
+			});
+		}
+
+		dataToPlot.push({
+			timestamp: timestamp,
 			value: dataPoint.value,
 			id: dataPoint._id
-		};
-	});
+		});
+
+		previousTimestamp = timestamp;
+	}
 
 	if (valueType == "int" || valueType == "float") {
 		return <>
