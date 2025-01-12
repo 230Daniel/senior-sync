@@ -15,3 +15,10 @@
 		padding: 8px;
 	}
 }
+
+.tooltip {
+	background-color: var(--theme-col-card) !important;
+	box-shadow: 10px 10px 5px var(--theme-col-shadow) !important;
+	border: var(--theme-border) !important;
+	border-radius: 4px !important;
+}

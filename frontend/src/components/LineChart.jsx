@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import classes from "./lineChart.module.css";
+import classes from "./metricGraph.module.css";
 
 function getNumberOfTicksWithDivisor(start, end, divisor) {
 	return Math.floor((end - start) / divisor) + 1;
@@ -50,7 +50,7 @@ function getTicks(start, end, minTicks, maxTicks) {
 	return [getTicksWithDivisor(start, end, divisor), divisor];
 }
 
-export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
+export default function MyLineChart({ data, timeRange, onTimeRangeSelected, unit }) {
 	const start = timeRange[0].getTime();
 	const end = timeRange[1].getTime();
 
@@ -104,62 +104,73 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 		<p>
 			Left click and drag to zoom in, right click to zoom back out.
 		</p>
-		<div className={classes.lineChart}>
-			<ResponsiveContainer width="100%" height={400}>
-				<LineChart
-					data={includedData}
-					onMouseDown={(chart, event) => {
-						if (event.button == 0) {
-							setSelectionLeft(chart.activeLabel);
-						} else if (event.button == 2) {
-							if (timeRangeHistory.length > 0) {
-								const newTimeRange = timeRangeHistory[0];
-								setTimeRangeHistory(timeRangeHistory.slice(1));
-								onTimeRangeSelected(newTimeRange);
-								return true;
-							}
+		<ResponsiveContainer width="100%" height={400}>
+			<LineChart
+				data={includedData}
+				onMouseDown={(chart, event) => {
+					if (event.button == 0) {
+						setSelectionLeft(chart.activeLabel);
+					} else if (event.button == 2) {
+						if (timeRangeHistory.length > 0) {
+							const newTimeRange = timeRangeHistory[0];
+							setTimeRangeHistory(timeRangeHistory.slice(1));
+							onTimeRangeSelected(newTimeRange);
+							return true;
 						}
-					}}
-					onMouseMove={(chart) => {
-						if (selectionLeft) setSelectionRight(chart.activeLabel);
-					}}
-					onMouseUp={() => {
-						setSelectionLeft(null);
-						setSelectionRight(null);
-						if (!selectionLeft || !selectionRight || selectionLeft >= selectionRight) return;
-
-						setTimeRangeHistory([timeRange, ...timeRangeHistory]);
-						const newTimeRange = [new Date(selectionLeft), new Date(selectionRight)];
-						onTimeRangeSelected(newTimeRange);
-					}}
-					onContextMenu={(chart, event) => { event.preventDefault(); }}>
-					<CartesianGrid strokeDasharray="4" horizontal={false} verticalValues={ticks.slice(1)} />
-					<Line
-						type="stepAfter"
-						dataKey="value"
-						connectNulls={false}
-						dot={includedData.length <= 128}
-						animationDuration={300}
-					/>
-					<XAxis
-						dataKey="timestamp"
-						type="number"
-						domain={[start, end]}
-						tick={CustomizedTick}
-						ticks={ticks}
-						interval={0}
-						stroke="var(--theme-col-chart-axis)"
-					/>
-					<YAxis stroke="var(--theme-col-chart-axis)" />
-					<Tooltip
-						animationDuration={0}
-						labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }} />
-
-					{selectionLeft && selectionRight && selectionRight > selectionLeft &&
-						<ReferenceArea yAxisId="0" x1={selectionLeft.getTime()} x2={selectionRight.getTime()} />
 					}
-				</LineChart>
-			</ResponsiveContainer>
-		</div>
+				}}
+				onMouseMove={(chart) => {
+					if (selectionLeft) setSelectionRight(chart.activeLabel);
+				}}
+				onMouseUp={() => {
+					setSelectionLeft(null);
+					setSelectionRight(null);
+					if (!selectionLeft || !selectionRight || selectionLeft >= selectionRight) return;
+
+					setTimeRangeHistory([timeRange, ...timeRangeHistory]);
+					const newTimeRange = [new Date(selectionLeft), new Date(selectionRight)];
+					onTimeRangeSelected(newTimeRange);
+				}}
+				onContextMenu={(chart, event) => { event.preventDefault(); }}>
+				<CartesianGrid
+					horizontal={false}
+					verticalValues={ticks.slice(1)}
+					strokeDasharray="4"
+					stroke="var(--theme-col-chart-grid)" />
+				<Line
+					type="monotone"
+					dataKey="value"
+					connectNulls={false}
+					dot={includedData.length <= 128}
+					animationDuration={300}
+					stroke="var(--theme-col-primary)"
+					strokeWidth={1.5}
+				/>
+				<XAxis
+					dataKey="timestamp"
+					type="number"
+					domain={[start, end]}
+					tick={CustomizedTick}
+					ticks={ticks}
+					interval={0}
+					stroke="var(--theme-col-chart-axis)"
+				/>
+				<YAxis stroke="var(--theme-col-chart-axis)" />
+				<Tooltip
+					animationDuration={0}
+					labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }}
+					formatter={(value, name, props) => ["", `${value} ${unit}`]}
+					separator=""
+					wrapperClassName={classes.tooltip} />
+
+				{selectionLeft && selectionRight && selectionRight > selectionLeft &&
+					<ReferenceArea
+						yAxisId="0"
+						x1={selectionLeft.getTime()}
+						x2={selectionRight.getTime()}
+						fill="var(--theme-col-chart-brush)" />
+				}
+			</LineChart>
+		</ResponsiveContainer>
 	</>;
 };

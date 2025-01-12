@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { ObjectId } from "bson";
 
 
-export default function MetricGraph({ metricId, valueType, timeRange, onTimeRangeSelected }) {
+export default function MetricGraph({ metric, valueType, timeRange, onTimeRangeSelected }) {
 
 	const [maxTimeRange, setMaxTimeRange] = useState(timeRange);
 
@@ -24,9 +24,9 @@ export default function MetricGraph({ metricId, valueType, timeRange, onTimeRang
 	}, [timeRange]);
 
 	const { data: dataPoints, error, isLoading } = useQuery(
-		[metricId, maxTimeRange],
+		[metric._id, maxTimeRange],
 		async () => {
-			return await getMetricHistory(metricId, maxTimeRange[0], maxTimeRange[1]);
+			return await getMetricHistory(metric._id, maxTimeRange[0], maxTimeRange[1]);
 		},
 		{
 			refetchInterval: 10000
@@ -71,7 +71,7 @@ export default function MetricGraph({ metricId, valueType, timeRange, onTimeRang
 
 	if (valueType == "int" || valueType == "float") {
 		return <>
-			<LineChart data={dataToPlot} timeRange={timeRange} onTimeRangeSelected={onTimeRangeSelected} />
+			<LineChart data={dataToPlot} timeRange={timeRange} onTimeRangeSelected={onTimeRangeSelected} unit={metric.unit} />
 		</>;
 	}
 

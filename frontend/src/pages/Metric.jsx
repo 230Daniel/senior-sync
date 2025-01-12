@@ -40,7 +40,7 @@ export default function MetricPage() {
 			<DateRangePicker value={timeRange} onChange={setTimeRange} />
 
 			<MetricGraph
-				metricId={metricId}
+				metric={metric}
 				valueType={metric.value_type}
 				timeRange={timeRange}
 				onTimeRangeSelected={setTimeRange} />
