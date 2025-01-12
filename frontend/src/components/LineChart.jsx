@@ -149,7 +149,6 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 						ticks={ticks}
 						interval={0}
 						stroke="var(--theme-col-chart-axis)"
-						opacity="1"
 					/>
 					<YAxis stroke="var(--theme-col-chart-axis)" />
 					<Tooltip
@@ -157,7 +156,7 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected }) {
 						labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }} />
 
 					{selectionLeft && selectionRight && selectionRight > selectionLeft &&
-						<ReferenceArea yAxisId="0" x1={selectionLeft} x2={selectionRight} />
+						<ReferenceArea yAxisId="0" x1={selectionLeft.getTime()} x2={selectionRight.getTime()} />
 					}
 				</LineChart>
 			</ResponsiveContainer>
