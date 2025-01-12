@@ -69,3 +69,7 @@ a {
     padding-right: 25px;
   }
 }
+
+.recharts-surface {
+  overflow: visible;
+}
