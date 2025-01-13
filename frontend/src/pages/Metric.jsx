@@ -9,6 +9,8 @@ import MetricGraph from "../components/MetricGraph";
 import { getSensor } from "../api/api";
 import { useTimeRangeQueryState } from "../hooks/useTimeRangeQueryState";
 
+import classes from "./metric.module.css";
+
 export default function MetricPage() {
 
 	const { metricId } = useParams();
@@ -35,15 +37,22 @@ export default function MetricPage() {
 
 	return (
 		<>
-			<h1>{metric.friendly_name}</h1>
+			<div className={classes.row}>
+				<h1>{metric.friendly_name} Sensor</h1>
 
-			<DateRangePicker value={timeRange} onChange={setTimeRange} />
+				<DateRangePicker value={timeRange} onChange={setTimeRange} />
+			</div>
 
 			<MetricGraph
 				metric={metric}
 				valueType={metric.value_type}
 				timeRange={timeRange}
 				onTimeRangeSelected={setTimeRange} />
+
+			<p className={classes.hint}>
+				Click and drag the graph to zoom in, right click to zoom back out.<br />
+				Use the time range selector in the top-right corner to choose another date.
+			</p>
 		</>
 	);
 }

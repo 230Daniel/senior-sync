@@ -7,6 +7,8 @@
 	--theme-col-status-red: #e41e4f;
 	--theme-col-status-gray: #575757;
 	--theme-col-status-contrast: #fff;
+
+	--theme-hint-opacity: 0.5;
 }
 
 :root:has(.dark) {
@@ -63,6 +65,8 @@
 	--theme-col-chart-axis: #ffffff;
 	--theme-col-chart-grid: #ffffff;
 	--theme-col-chart-brush: #ffff00;
+
+	--theme-hint-opacity: 1;
 }
 
 .selector {

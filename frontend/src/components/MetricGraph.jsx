@@ -33,11 +33,15 @@ export default function MetricGraph({ metric, valueType, timeRange, onTimeRangeS
 	);
 
 	if (isLoading) {
-		return "loading";
+		return <div className={classes.placeholder}>
+			Loading...
+		</div>;
 	}
 
 	if (error) {
-		return "error";
+		return <div className={classes.placeholder}>
+			Something went wrong.
+		</div>;
 	}
 
 	const dataToPlot = new Array(0);

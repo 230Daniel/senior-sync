@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CartesianGrid, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Label, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import classes from "./metricGraph.module.css";
 
@@ -12,7 +12,10 @@ function getTicksWithDivisor(start, end, divisor) {
 		{ length: getNumberOfTicksWithDivisor(start, end, divisor) },
 		(value, index) => start + index * divisor);
 
+	// Remove the last tick if it's too close to the end tick.
+	if (end - ticks[ticks.length - 1] <= (divisor / 2)) ticks.pop();
 	ticks.push(end);
+
 	return ticks;
 }
 
@@ -51,10 +54,13 @@ function getTicks(start, end, minTicks, maxTicks) {
 }
 
 export default function MyLineChart({ data, timeRange, onTimeRangeSelected, unit }) {
+
+	const [numTicks, setNumTicks] = useState(8);
+
 	const start = timeRange[0].getTime();
 	const end = timeRange[1].getTime();
 
-	const [ticks, tickDivisor] = getTicks(start, end, 8, 8);
+	const [ticks, tickDivisor] = getTicks(start, end, numTicks, numTicks);
 
 	const CustomizedTick = ({ x, y, stroke, payload }) => {
 		const date = new Date(payload.value);
@@ -101,10 +107,9 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected, unit
 	const includedData = data.filter((datapoint) => datapoint.timestamp >= start && datapoint.timestamp <= end);
 
 	return <>
-		<p>
-			Left click and drag to zoom in, right click to zoom back out.
-		</p>
-		<ResponsiveContainer width="100%" height={400}>
+		<ResponsiveContainer width="100%" height={400} onResize={(width) => {
+			setNumTicks(Math.round(width / 180));
+		}}>
 			<LineChart
 				data={includedData}
 				onMouseDown={(chart, event) => {
@@ -154,7 +159,16 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected, unit
 					ticks={ticks}
 					interval={0}
 					stroke="var(--theme-col-chart-axis)"
-				/>
+				>
+					{includedData.length == 0 && (
+						<Label
+							fill="var(--theme-col-chart-axis)"
+							value='No data for the selected time range.'
+							position='center'
+							style={{ transform: `translate(0px, -50%)` }}
+						/>
+					)}
+				</XAxis>
 				<YAxis stroke="var(--theme-col-chart-axis)" />
 				<Tooltip
 					animationDuration={0}

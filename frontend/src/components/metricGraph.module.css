@@ -22,3 +22,10 @@
 	border: var(--theme-border) !important;
 	border-radius: 4px !important;
 }
+
+.placeholder {
+	display: flex;
+	height: 400px;
+	align-items: center;
+	justify-content: center;
+}
