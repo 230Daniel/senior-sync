@@ -137,11 +137,12 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected, unit
 					onTimeRangeSelected(newTimeRange);
 				}}
 				onContextMenu={(chart, event) => { event.preventDefault(); }}>
-				<CartesianGrid
-					horizontal={false}
-					verticalValues={ticks.slice(1)}
-					strokeDasharray="4"
-					stroke="var(--theme-col-chart-grid)" />
+				{includedData.length > 0 &&
+					<CartesianGrid
+						verticalValues={ticks.slice(1)}
+						strokeDasharray="4"
+						stroke="var(--theme-col-chart-grid)" />
+				}
 				<Line
 					type="monotone"
 					dataKey="value"
@@ -169,7 +170,7 @@ export default function MyLineChart({ data, timeRange, onTimeRangeSelected, unit
 						/>
 					)}
 				</XAxis>
-				<YAxis stroke="var(--theme-col-chart-axis)" />
+				<YAxis stroke="var(--theme-col-chart-axis)" domain={includedData.length > 0 ? undefined : [0, 0]} />
 				<Tooltip
 					animationDuration={0}
 					labelFormatter={(label, payload) => { return (new Date(label)).toLocaleString(); }}
