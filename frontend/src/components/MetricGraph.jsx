@@ -55,7 +55,7 @@ export default function MetricGraph({ metric, valueType, timeRange, onTimeRangeS
 			: 0;
 
 		// Insert null point between this and the previous datapoint to create a gap.
-		if (timeDifference >= 60000) {
+		if (timeDifference >= 60000 && valueType != "str") {
 			dataToPlot.push({
 				timestamp: new Date((timestamp.getTime() + previousTimestamp.getTime()) / 2),
 				value: null,

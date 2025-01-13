@@ -49,8 +49,9 @@ export default function MetricPage() {
 				timeRange={timeRange}
 				onTimeRangeSelected={setTimeRange} />
 
+
 			<p className={classes.hint}>
-				Click and drag the graph to zoom in, right click to zoom back out.<br />
+				{metric.value_type != "str" && <>Click and drag the graph to zoom in, right click to zoom back out.<br /></>}
 				Use the time range selector in the top-right corner to choose another date.
 			</p>
 		</>
