@@ -7,32 +7,47 @@
 	--theme-col-status-red: #e41e4f;
 	--theme-col-status-gray: #575757;
 	--theme-col-status-contrast: #fff;
+
+	--theme-hint-opacity: 0.5;
 }
 
 :root:has(.dark) {
 	--theme-color-scheme: dark;
 	--theme-col-background: #1e1e1e;
+	--theme-col-background-contrast: #b9b9b9;
 	--theme-col-nav: #313131;
+	--theme-border: none;
 	--theme-col-shadow: #131313;
 	--theme-col-link: #03bfd6;
 	--theme-col-link-hover: #038ed6;
 	--theme-col-card: #272727;
+
+	--theme-col-chart-axis: #fff;
+	--theme-col-chart-grid: #646464;
+	--theme-col-chart-brush: #444444;
 }
 
 :root:has(.light) {
 	--theme-color-scheme: light;
 	--theme-col-background: #eeeeee;
+	--theme-col-background-contrast: #3d3d3d;
 	--theme-col-nav: #e2e2e2;
+	--theme-border: none;
 	--theme-col-shadow: #a3a3a3;
 	--theme-col-link: #036aaa;
 	--theme-col-link-hover: #02367e;
 	--theme-col-card: #f9f9f9;
 	--theme-col-status-gray: #c7c7c7;
+
+	--theme-col-chart-axis: #000;
+	--theme-col-chart-grid: #c4c4c4;
+	--theme-col-chart-brush: #838383;
 }
 
 :root:has(.highContrast) {
 	--theme-color-scheme: dark;
 	--theme-col-background: #000;
+	--theme-col-background-contrast: #fff;
 	--theme-col-nav: #111111;
 	--theme-border: 1px solid #ffff00;
 	--theme-col-link: #ffff00;
@@ -46,6 +61,12 @@
 	--theme-col-status-red: #ff0040;
 	--theme-col-status-gray: #d4d4d4;
 	--theme-col-status-contrast: #000;
+
+	--theme-col-chart-axis: #ffffff;
+	--theme-col-chart-grid: #ffffff;
+	--theme-col-chart-brush: #ffff00;
+
+	--theme-hint-opacity: 1;
 }
 
 .selector {
