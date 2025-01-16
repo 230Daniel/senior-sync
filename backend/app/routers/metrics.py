@@ -7,7 +7,6 @@ from pydantic import ValidationError
 
 from ..models.datapoint import BaseDataPointModel, DataPointModels
 from .. import database
-from ..models.sensor import SensorWithDatapointModel
 
 router = APIRouter()
 
@@ -69,23 +68,3 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
     data_points = database.get_datapoints_by_time(sensor, start_time, end_time)
     data_points.sort(key=attrgetter("timestamp"))
     return data_points
-
-
-
-@router.get("/all", summary="Fetches current metrics from a sensor.")
-async def get_metrics() -> List[SensorWithDatapointModel]:
-    
-    sensors = database.get_sensors()
-    modelList = []
-
-    for sensor in sensors:
-        data_point = database.get_current_datapoint(sensor)
-        #data_points.sort(key=attrgetter("timestamp"))
-        model = SensorWithDatapointModel(value = data_point, **sensor.model_dump(by_alias=True))
-        modelList.append(model)
-    
-    return modelList
-
-
-
-    
