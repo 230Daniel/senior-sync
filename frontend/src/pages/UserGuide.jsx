@@ -1,5 +1,3 @@
-
-
 const UserGuide = () => {
     return (
       <div>

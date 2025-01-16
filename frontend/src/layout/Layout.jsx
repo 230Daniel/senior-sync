@@ -31,7 +31,7 @@ function Layout() {
           <div className={classes.themeSelector}>
             <ThemeSelector />
           </div>
-		  <NavLink to="/UserGuide"><GiHelp size={28} style={{ marginLeft: "20px" }} color={"yellow"}/></NavLink>
+		  <NavLink to="/UserGuide"><GiHelp size={28} style={{ marginLeft: "20px" }} color={"white"}/></NavLink>
         </div>
       </header>
       <main>
@@ -44,5 +44,8 @@ function Layout() {
 }
 
 export default Layout;
+
+
+
 
 
