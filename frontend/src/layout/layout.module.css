@@ -48,10 +48,19 @@
 }
 
 .helpIcon {
-    fill: var(--theme-col-primary);
+    color: unset;
     margin-left: 20px;
     font-size: 30px;
     width: 1em;
     height: 1.3em;
+
+    &:hover {
+		transform: scale(1.25);
+        color: unset;
+	}
+
+	&:focus {
+		outline: revert
+	}
     
 }
