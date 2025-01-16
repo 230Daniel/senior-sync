@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { DateRangePicker, DefaultStartValue, DefaultEndValue } from "../components/DateRangePicker";
 import MetricGraph from "../components/MetricGraph";
 
-import { getSensor } from "../api/api";
+import { Backend, getSensor } from "../api/api";
 import { useTimeRangeQueryState } from "../hooks/useTimeRangeQueryState";
 
 import classes from "./metric.module.css";
@@ -56,9 +56,12 @@ export default function MetricPage() {
 			</p>
 
 			<div className={classes.exportcontainer}>
-				<button className={classes.export}> 
-					Export
-				</button> 
+				<a className={classes.export} 
+				href={new URL(`metrics/${metric._id}/export`,Backend).toString()} 
+				download={`Export_${metric._id}.csv`}
+				> 
+					Export to CSV
+				</a> 
 			</div>
 		</>
 	);

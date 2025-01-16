@@ -87,7 +87,7 @@ async def get_export(sensor_id: str) -> StreamingResponse:
     return StreamingResponse(
         iter([df.to_csv(index=False)]),
         media_type="text/csv",
-        headers={"Content-Disposition": f"attachment; filename=data.csv"}
+        headers={"Content-Disposition": f"attachment; filename=Export_{sensor_id}.csv"}
 )
 
 
