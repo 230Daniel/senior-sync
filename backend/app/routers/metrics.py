@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import attrgetter
 from typing import Any, List
 from fastapi import APIRouter, Body, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
@@ -32,6 +33,29 @@ async def record_now(sensor_id: str, value: Any = Body()):
 
     return Response(status_code=status.HTTP_201_CREATED)
 
+@router.post(
+    "/{sensor_id}",
+    summary="Records the the reading of a sensor with a timestamp.",
+    status_code=status.HTTP_201_CREATED,
+)
+async def record(sensor_id: str, data_point: BaseDataPointModel = Body()):
+
+    if not (sensor := database.get_sensor(sensor_id)):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
+
+    try:
+        # Convert to the appropriate DataPointModel type for this sensor.
+        data_point = DataPointModels[sensor.value_type](
+            value=data_point.value,
+            timestamp=data_point.timestamp
+        )
+    except ValidationError as exc:
+        raise RequestValidationError(exc.errors())
+
+    database.add_datapoint(sensor.id, data_point)
+
+    return Response(status_code=status.HTTP_201_CREATED)
+
 
 @router.get("/{sensor_id}/history", summary="Fetches all datapoints for a sensor within a given time range.")
 async def get_history(sensor_id: str, start_time: datetime, end_time: datetime = None) -> List[BaseDataPointModel]:
@@ -41,4 +65,6 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
         raise HTTPException(status.HTTP_404_NOT_FOUND,
                             f"Sensor {sensor_id} not found.")
 
-    return database.get_datapoints_by_time(sensor, start_time, end_time)
+    data_points = database.get_datapoints_by_time(sensor, start_time, end_time)
+    data_points.sort(key=attrgetter("timestamp"))
+    return data_points
