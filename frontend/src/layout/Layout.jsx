@@ -1,14 +1,10 @@
-import { NavLink, Outlet, useNavigate } from 'react-router';
+import { NavLink, Outlet } from 'react-router';
 import classes from './layout.module.css';
 import ThemeSelector from './ThemeSelector';
 import { GiHelp } from "react-icons/gi";
 
 function Layout() {
-	const navigate = useNavigate();
-
-	const goToUserGuide = () => {
-		navigate('/UserGuide');
-	};
+	
 
 
 
@@ -31,7 +27,7 @@ function Layout() {
 					<div className={classes.themeSelector}>
 						<ThemeSelector />
 					</div>
-					<NavLink to="/UserGuide"><GiHelp size={28} style={{ marginLeft: "20px" }} color={"white"} /></NavLink>
+					<NavLink to="/UserGuide" className={classes.helpIcon}><GiHelp  title='Press for help'/></NavLink>
 				</div>
 			</header>
 			<main>
@@ -44,8 +40,3 @@ function Layout() {
 }
 
 export default Layout;
-
-
-
-
-

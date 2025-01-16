@@ -46,3 +46,12 @@
 .brand:hover>.logo {
     fill: var(--theme-col-primary-contrast);
 }
+
+.helpIcon {
+    fill: var(--theme-col-primary);
+    margin-left: 20px;
+    font-size: 30px;
+    width: 1em;
+    height: 1.3em;
+    
+}
