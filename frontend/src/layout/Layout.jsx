@@ -1,10 +1,14 @@
 import { NavLink, Outlet } from 'react-router';
-
 import classes from './layout.module.css';
 
 import { ThemeSelector } from './ThemeSelector';
+import { GiHelp } from "react-icons/gi";
 
 function Layout() {
+	
+
+
+
 	return (
 		<>
 			<header className={classes.header}>
@@ -24,6 +28,7 @@ function Layout() {
 					<div className={classes.themeSelector}>
 						<ThemeSelector />
 					</div>
+					<NavLink to="/UserGuide" className={classes.helpIcon}><GiHelp  title='Press for help'/></NavLink>
 				</div>
 			</header>
 			<main>
