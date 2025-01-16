@@ -4,6 +4,9 @@ from typing import Any, List
 from fastapi import APIRouter, Body, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
+import pandas as pd
+from fastapi.responses import StreamingResponse # Add to Top
+from fastapi.encoders import jsonable_encoder
 
 from ..models.datapoint import BaseDataPointModel, DataPointModels
 from .. import database
@@ -68,3 +71,23 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
     data_points = database.get_datapoints_by_time(sensor, start_time, end_time)
     data_points.sort(key=attrgetter("timestamp"))
     return data_points
+
+@router.get("/{sensor_id}/export", summary="Export all paitent data.")
+async def get_export(sensor_id: str) -> StreamingResponse:
+   
+    if not (sensor := database.get_sensor(sensor_id)):
+        raise HTTPException(status.HTTP_404_NOT_FOUND,
+                            f"Sensor {sensor_id} not found.")
+
+    data_points = database.get_all_datapoints(sensor)
+    data_points.sort(key=attrgetter("timestamp"))
+    df = pd.DataFrame((jsonable_encoder(data_points))
+        
+    )
+    return StreamingResponse(
+        iter([df.to_csv(index=False)]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=data.csv"}
+)
+
+

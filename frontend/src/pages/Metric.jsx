@@ -54,6 +54,12 @@ export default function MetricPage() {
 				{metric.value_type != "str" && <>Click and drag the graph to zoom in, right click to zoom back out.<br /></>}
 				Use the time range selector in the top-right corner to choose another date.
 			</p>
+
+			<div className={classes.exportcontainer}>
+				<button className={classes.export}> 
+					Export
+				</button> 
+			</div>
 		</>
 	);
 }

@@ -12,3 +12,23 @@
 	text-align: center;
 	opacity: var(--theme-hint-opacity);
 }
+
+.export {
+	margin-top: 50px;
+	text-align: center;
+	opacity: var(--theme-hint-opacity);
+	font-size: 40px;
+	border: none;
+	background-color: var(--theme-hint-opacity);
+
+	&:hover {
+		transform: scale(1.25);
+	}
+
+}
+.exportcontainer {
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
