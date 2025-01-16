@@ -1,0 +1,31 @@
+.table {
+	margin: 25px;
+	width: 100%;
+}
+
+.table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+
+	&>*>td,
+	&>*>th {
+		border: 1px solid var(--theme-col-background-contrast);
+		text-align: left;
+		padding: 8px;
+	}
+}
+
+.tooltip {
+	background-color: var(--theme-col-card) !important;
+	box-shadow: 10px 10px 5px var(--theme-col-shadow) !important;
+	border: var(--theme-border) !important;
+	border-radius: 4px !important;
+}
+
+.placeholder {
+	display: flex;
+	height: 400px;
+	align-items: center;
+	justify-content: center;
+}

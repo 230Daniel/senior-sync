@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router';
 import classes from './layout.module.css';
-import ThemeSelector from './ThemeSelector';
+
+import { ThemeSelector } from './ThemeSelector';
 import { GiHelp } from "react-icons/gi";
 
 function Layout() {
