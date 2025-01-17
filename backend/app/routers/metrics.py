@@ -72,7 +72,7 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
     data_points.sort(key=attrgetter("timestamp"))
     return data_points
 
-@router.get("/{sensor_id}/export", summary="Export all paitent data.")
+@router.get("/{sensor_id}/export", summary="Creates a CSV file with all datapoints from this sensor.")
 async def get_export(sensor_id: str) -> StreamingResponse:
    
     if not (sensor := database.get_sensor(sensor_id)):
