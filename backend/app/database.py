@@ -48,3 +48,12 @@ def get_datapoints_by_time(sensor: SensorModel, start_time: datetime, end_time: 
         model_type(**result)
         for result in results
     ]
+
+def get_all_datapoints(sensor: SensorModel) -> List[BaseDataPointModel]:
+    collection = __get_datapoints_collection(sensor.id)
+    results = collection.find({})
+    model_type = DataPointModels[sensor.value_type]
+    return [
+        model_type(**result)
+        for result in results
+    ]

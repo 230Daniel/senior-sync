@@ -12,3 +12,34 @@
 	text-align: center;
 	opacity: var(--theme-hint-opacity);
 }
+
+.export {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 20px;
+	border: 2px solid var(--theme-col-primary);
+	background-color: var(--theme-col-card);
+	border-radius: 10px;
+	padding: 5px;
+	box-shadow: 7px 7px 5px var(--theme-col-shadow);
+	color: var(--theme-col-primary);
+	text-decoration: none;
+
+	&:hover {
+		background-color: var(--theme-col-primary);
+		color: var(--theme-col-primary-contrast);
+	}
+
+	&:active {
+		transform: translateY(4px);
+		color: var(--theme-col-primary-contrast);
+		box-shadow: 3px 3px 5px var(--theme-col-shadow);
+	}
+}
+
+.exportcontainer {
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
