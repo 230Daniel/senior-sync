@@ -1,18 +1,22 @@
 from datetime import datetime
 from typing import Dict, Type, Union
 from pydantic import BaseModel
+from .colours_status_enum import ColourStatusEnum
+from typing import Optional
 
 
 class BaseDataPointModel(BaseModel):
     timestamp: datetime
     value: Union[int, float, str]
 
+class ColourDataPointModel(BaseDataPointModel):
+    colour: ColourStatusEnum
 
-class IntDataPointModel(BaseDataPointModel):
+class IntDataPointModel(ColourDataPointModel):
     value: int
 
 
-class FloatDataPointModel(BaseDataPointModel):
+class FloatDataPointModel(ColourDataPointModel):
     value: float
 
 
