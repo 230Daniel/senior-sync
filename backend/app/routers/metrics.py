@@ -45,7 +45,7 @@ async def record(sensor_id: str, data_point: BaseDataPointModel = Body()):
                     colour = thresholds[i].colour
 
             # Convert to the appropriate DataPointModel type for this sensor.
-            data_point = DataPointModels[sensor.value_type](
+            data_point = data_point_type(
                 value=data_point.value,
                 timestamp=data_point.timestamp,
                 colour=colour
