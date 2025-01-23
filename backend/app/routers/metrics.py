@@ -80,7 +80,6 @@ async def get_metrics() -> List[SensorWithDatapointModel]:
 
     for sensor in sensors:
         data_point = database.get_current_datapoint(sensor)
-        #data_points.sort(key=attrgetter("timestamp"))
         model = SensorWithDatapointModel(value = data_point, **sensor.model_dump(by_alias=True))
         modelList.append(model)
     
