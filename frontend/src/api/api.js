@@ -39,3 +39,8 @@ export async function getMetricHistory(metricId, startTime, endTime) {
 	const response = await get(`metrics/${metricId}/history${query}`);
 	return await response.json();
 }
+
+export async function getAlerts() {
+	const response = await get(`alerts`);
+	return await response.json();
+}
