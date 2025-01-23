@@ -6,8 +6,8 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 
 
+from .models.alert import Alert
 from .models.datapoint import DataPoint, DataPointModels
-
 from .models.sensor import Sensor
 
 load_dotenv()
@@ -15,6 +15,7 @@ client = MongoClient(os.environ["MONGO_HOST"])
 db = client["senior_sync"]
 
 Sensors = db["sensors"]
+Alerts = db["alerts"]
 
 
 def __get_datapoints_collection(sensor_id: str) -> Collection:
@@ -66,4 +67,22 @@ def get_all_datapoints(sensor: Sensor) -> List[DataPoint]:
     return [
         model_type(**result)
         for result in results
+    ]
+
+def add_alert(alert: Alert):
+    Alerts.insert_one(alert.model_dump(by_alias=True))
+
+def update_alert(alert: Alert):
+    Alerts.replace_one({"_id": alert.id}, alert)
+
+def get_active_alerts() -> List[Alert]:
+    return [
+        Alert(**result)
+        for result in Alerts.find({"is_active": True}).sort({"timestamp": -1})
+    ]
+
+def get_alerts_for_sensor(sensor_id: str) -> List[Alert]:
+    return [
+        Alert(**result)
+        for result in Alerts.find({"sensor_id": sensor_id}).sort({"timestamp": -1})
     ]
