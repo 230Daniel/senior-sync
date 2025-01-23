@@ -8,9 +8,9 @@ import pandas as pd
 from fastapi.responses import StreamingResponse # Add to Top
 from fastapi.encoders import jsonable_encoder
 
-from ..models.datapoint import BaseDataPointModel, ColourDataPointModel, DataPointModels
+from ..models.datapoint import CreateDataPoint, DataPoint, ColourDataPoint, DataPointModels
 from .. import database
-from ..models.sensor import SensorWithDatapointModel
+from ..models.sensor import SensorWithDatapoint
 
 router = APIRouter()
 
@@ -20,14 +20,14 @@ router = APIRouter()
     summary="Records the the reading of a sensor with a timestamp.",
     status_code=status.HTTP_201_CREATED,
 )
-async def record(sensor_id: str, data_point: BaseDataPointModel = Body()):
+async def record(sensor_id: str, data_point: CreateDataPoint = Body()):
 
     if not (sensor := database.get_sensor(sensor_id)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
     try:
         data_point_type = DataPointModels[sensor.value_type]
-        if not issubclass(data_point_type, ColourDataPointModel):
+        if not issubclass(data_point_type, ColourDataPoint):
             data_point = data_point_type(
             value=data_point.value,
             timestamp=data_point.timestamp,
@@ -59,7 +59,7 @@ async def record(sensor_id: str, data_point: BaseDataPointModel = Body()):
 
 
 @router.get("/{sensor_id}/history", summary="Fetches all datapoints for a sensor within a given time range.")
-async def get_history(sensor_id: str, start_time: datetime, end_time: datetime = None) -> List[BaseDataPointModel]:
+async def get_history(sensor_id: str, start_time: datetime, end_time: datetime = None) -> List[DataPoint]:
     end_time = end_time or datetime.now()
 
     if not (sensor := database.get_sensor(sensor_id)):
@@ -73,14 +73,14 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
 
 
 @router.get("/all", summary="Fetches current metrics from a sensor.")
-async def get_metrics() -> List[SensorWithDatapointModel]:
+async def get_metrics() -> List[SensorWithDatapoint]:
     
     sensors = database.get_sensors()
     modelList = []
 
     for sensor in sensors:
         data_point = database.get_current_datapoint(sensor)
-        model = SensorWithDatapointModel(value = data_point, **sensor.model_dump(by_alias=True))
+        model = SensorWithDatapoint(value = data_point, **sensor.model_dump(by_alias=True))
         modelList.append(model)
     
     return modelList
