@@ -13,6 +13,11 @@ router = APIRouter()
 async def get_sensors() -> List[SensorModel]:
     return database.get_sensors()
 
+@router.get("/{sensor_id}", summary="Returns a sensor.")
+async def get_sensor(sensor_id: str) -> SensorModel:
+    if sensor := database.get_sensor(sensor_id):
+        return sensor
+    raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
 @router.post("", summary="Registers a new sensor.")
 async def add_sensor(sensor: SensorModel = Body()):

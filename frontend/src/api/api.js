@@ -1,13 +1,23 @@
+import { QueryClient as ReactQueryClient } from "react-query";
+
 // The absolute path to the backend. If APP_BACKEND is /api/ this will become https://current.domain/api/.
 export const Backend = new URL(__APP_BACKEND, window.location.href).href;
 
-function get(endpoint) {
-	return fetch(new URL(endpoint, Backend));
-}
+export const QueryClient = new ReactQueryClient({
+	defaultOptions: {
+		queries: {
+			retry: false,
+			refetchOnWindowFocus: false
+		},
+	}
+});
 
-export async function getRoot() {
-	const response = await get("");
-	return await response.text();
+async function get(endpoint) {
+	const response = await fetch(new URL(endpoint, Backend));
+	if (!response.ok) {
+		throw new Error(`HTTP response code ${response.status} for endpoint ${endpoint}.`);
+	}
+	return response;
 }
 
 export async function getCurrentMetrics() {
@@ -32,4 +42,19 @@ export async function getCurrentMetrics() {
 		{ "id": "body-temperature", "name": "Body Temperature", "value": random(36, 38), "unit": "°C", "status": "green" },
 		{ "id": "vibe-index", "name": "Vibe Index", "value": "No Data", "unit": "", "status": "gray" },
 	];
+}
+
+export async function getSensor(metricId) {
+	const response = await get(`sensors/${metricId}`);
+	return await response.json();
+}
+
+export async function getMetricHistory(metricId, startTime, endTime) {
+	let query = `?start_time=${startTime.toISOString()}`;
+	if (endTime) {
+		query += `&end_time=${endTime?.toISOString()}`;
+	}
+
+	const response = await get(`metrics/${metricId}/history${query}`);
+	return await response.json();
 }
