@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { DateRangePicker, DefaultStartValue, DefaultEndValue } from "../components/DateRangePicker";
 import MetricGraph from "../components/MetricGraph";
 
-import { getSensor } from "../api/api";
+import { Backend, getSensor } from "../api/api";
 import { useTimeRangeQueryState } from "../hooks/useTimeRangeQueryState";
 
 import classes from "./metric.module.css";
@@ -54,6 +54,15 @@ export default function MetricPage() {
 				{metric.value_type != "str" && <>Click and drag the graph to zoom in, right click to zoom back out.<br /></>}
 				Use the time range selector in the top-right corner to choose another date.
 			</p>
+
+			<div className={classes.exportcontainer}>
+				<a className={classes.export} 
+				href={new URL(`metrics/${metric._id}/export`,Backend).toString()} 
+				download={`Export_${metric._id}.csv`}
+				> 
+					Export to CSV
+				</a> 
+			</div>
 		</>
 	);
 }
