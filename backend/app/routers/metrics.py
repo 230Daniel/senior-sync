@@ -15,39 +15,6 @@ router = APIRouter()
 
 
 @router.post(
-    "/{sensor_id}/now",
-    summary="Records the current reading of a sensor.",
-    status_code=status.HTTP_201_CREATED,
-)
-async def record_now(sensor_id: str, value: Any = Body()):
-
-    if not (sensor := database.get_sensor(sensor_id)):
-        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
-
-    try:
-        thresholds = sensor.colour_status_boundaries
-        thresholds.sort(key=lambda x: x.threshold)
-
-        for i in range(len(thresholds)):
-            if i == 0 and value < thresholds[i].threshold:
-                colour = thresholds[i].colour
-            if i > 0 and thresholds[i-1].threshold <= value < thresholds[i].threshold:
-                colour = thresholds[i-1].colour
-            elif i == len(thresholds) -1 and value >= thresholds[i].threshold:
-                colour = thresholds[i].colour
-
-        # Look up the appropriate DataPointModel type to use for this sensor and instantiate it.
-        data_point = DataPointModels[sensor.value_type](
-            timestamp=datetime.now(), value=value, colour=colour)
-    except ValidationError as exc:
-        # The user gave us the wrong type of data in `value`, raise it as a RequestValidationError to pass on the message.
-        raise RequestValidationError(exc.errors())
-
-    database.add_datapoint(sensor.id, data_point)
-
-    return Response(status_code=status.HTTP_201_CREATED)
-
-@router.post(
     "/{sensor_id}",
     summary="Records the the reading of a sensor with a timestamp.",
     status_code=status.HTTP_201_CREATED,
@@ -58,11 +25,29 @@ async def record(sensor_id: str, data_point: BaseDataPointModel = Body()):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
     try:
-        # Convert to the appropriate DataPointModel type for this sensor.
-        data_point = DataPointModels[sensor.value_type](
+        if sensor.value_type == "str":
+            data_point = DataPointModels[sensor.value_type](
             value=data_point.value,
-            timestamp=data_point.timestamp
+            timestamp=data_point.timestamp,
         )
+        else:
+            thresholds = sensor.colour_status_boundaries
+            thresholds.sort(key=lambda x: x.threshold)
+
+            for i in range(len(thresholds)):
+                if i == 0 and data_point.value < thresholds[i].threshold:
+                    colour = thresholds[i].colour
+                if i > 0 and thresholds[i-1].threshold <= data_point.value < thresholds[i].threshold:
+                    colour = thresholds[i-1].colour
+                elif i == len(thresholds) -1 and data_point.value >= thresholds[i].threshold:
+                    colour = thresholds[i].colour
+
+            # Convert to the appropriate DataPointModel type for this sensor.
+            data_point = DataPointModels[sensor.value_type](
+                value=data_point.value,
+                timestamp=data_point.timestamp,
+                colour=colour
+            )
     except ValidationError as exc:
         raise RequestValidationError(exc.errors())
 

@@ -10,7 +10,6 @@ class SensorValueType(str, Enum):
     str = "str"
 
 class ColourStatusEnum(str, Enum):
-    
     red = "red"
     amber = "amber"
     green = "green"
@@ -24,4 +23,4 @@ class SensorModel(BaseModel):
     friendly_name: str
     unit: str
     value_type: SensorValueType
-    colour_status_boundaries: List[ColourStatusBoundaryModel]
+    colour_status_boundaries: Optional[List[ColourStatusBoundaryModel]] = None
