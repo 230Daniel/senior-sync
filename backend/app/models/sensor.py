@@ -1,25 +1,19 @@
-from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from .datapoint import BaseDataPointModel
-from .colours_status_enum import ColourStatusEnum
+from .datapoint import DataPoint
+from .enums import ColourStatus, SensorValueType
 
 
-class SensorValueType(str, Enum):
-    int = "int"
-    float = "float"
-    str = "str"
-
-class ColourStatusBoundaryModel(BaseModel):
+class ColourStatusBoundary(BaseModel):
     threshold: float
-    colour: ColourStatusEnum
+    colour: ColourStatus
 
-class SensorModel(BaseModel):
+class Sensor(BaseModel):
     id: str = Field(alias="_id")
     friendly_name: str
     unit: str
     value_type: SensorValueType
-    colour_status_boundaries: Optional[List[ColourStatusBoundaryModel]] = None
+    colour_status_boundaries: Optional[List[ColourStatusBoundary]] = None
 
-class SensorWithDatapointModel(SensorModel):
-    value: Optional[BaseDataPointModel] = None
+class SensorWithDatapoint(Sensor):
+    value: Optional[DataPoint] = None

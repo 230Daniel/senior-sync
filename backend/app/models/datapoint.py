@@ -1,26 +1,44 @@
 from datetime import datetime
 from typing import Dict, Type, Union
 from pydantic import BaseModel
-from .colours_status_enum import ColourStatusEnum
+from .enums import ColourStatus
 from typing import Optional
 
-
-class BaseDataPointModel(BaseModel):
+class CreateDataPoint(BaseModel):
+    """
+    Create a datapoint with timestamp and value only.
+    """
     timestamp: datetime
     value: Union[int, float, str]
 
-class ColourDataPointModel(BaseDataPointModel):
-    colour: ColourStatusEnum
+class DataPoint(CreateDataPoint):
+    """
+    A full datapoint with timestamp, value, and colour.
+    """
+    colour: Optional[ColourStatus] = None
 
-class IntDataPointModel(ColourDataPointModel):
+class ColourDataPoint(DataPoint):
+    """
+    A datapoint which must have a colour.
+    """
+    colour: ColourStatus
+
+class IntDataPointModel(ColourDataPoint):
+    """
+    A datapoint which must have an integer value and colour.
+    """
     value: int
 
-
-class FloatDataPointModel(ColourDataPointModel):
+class FloatDataPointModel(ColourDataPoint):
+    """
+    A datapoint which must have a float value and colour.
+    """
     value: float
 
-
-class StrDataPointModel(BaseDataPointModel):
+class StrDataPointModel(DataPoint):
+    """
+    A datapoint which must have a string value.
+    """
     value: str
 
 
