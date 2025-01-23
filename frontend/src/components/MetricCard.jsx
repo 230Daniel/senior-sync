@@ -5,17 +5,17 @@ import { NavLink } from "react-router";
 
 function MetricCard({ metric }) {
 
-	const isStale = new Date(metric.value.timestamp) > new Date(Date.now() - 60 * 1000);
+	const isStale = metric.value == null || new Date(metric.value.timestamp) < new Date(Date.now() - 60 * 1000);
 	const value = isStale ? "No data" : metric.value.value;
 	const unit = isStale ? "" : metric.unit;
-	const status = "green"; // TODO: Use actual value
+	const status = isStale ? "gray" : "green"; // TODO: Use colour value from metric.value
 
 	const textLength = String(value).length;
 	const fontSize = (3 - Math.max(textLength - 3, 0) * 0.25) + "em";
 
 	return (
 		<>
-			<NavLink to={`/metric/${metric.id}`} className={classes.card} style={{
+			<NavLink to={`/metric/${metric._id}`} className={classes.card} style={{
 				// @ts-ignore
 				"--col-card-status": `var(--theme-col-status-${status})`
 			}}>
