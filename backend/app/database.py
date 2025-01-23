@@ -81,8 +81,8 @@ def get_active_alerts() -> List[Alert]:
         for result in Alerts.find({"is_active": True}).sort({"timestamp": -1})
     ]
 
-def get_alerts_for_sensor(sensor_id: str) -> List[Alert]:
+def get_active_alerts_for_sensor(sensor_id: str) -> List[Alert]:
     return [
         Alert(**result)
-        for result in Alerts.find({"sensor_id": sensor_id}).sort({"timestamp": -1})
+        for result in Alerts.find({"sensor_id": sensor_id, "is_active": True}).sort({"timestamp": -1})
     ]
