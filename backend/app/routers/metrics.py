@@ -26,8 +26,9 @@ async def record(sensor_id: str, data_point: BaseDataPointModel = Body()):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
     try:
-        if sensor.value_type == "str":
-            data_point = DataPointModels[sensor.value_type](
+        data_point_type = DataPointModels[sensor.value_type]
+        if not issubclass(data_point_type, ColourDataPointModel):
+            data_point = data_point_type(
             value=data_point.value,
             timestamp=data_point.timestamp,
         )
