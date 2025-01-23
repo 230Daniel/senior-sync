@@ -1,26 +1,24 @@
-import { useEffect, useState } from "react";
 import MetricCard from "./MetricCard";
 
-import { getCurrentMetrics } from "../api/api";
+import { getAllMetrics } from "../api/api";
 
 import classes from './metricCards.module.css';
+import { useQuery } from "react-query";
 
 function HealthMetrics() {
 
-	const [metrics, setMetrics] = useState(null);
+	const { data: metrics, isError, isLoading } = useQuery(
+		[],
+		getAllMetrics,
+		{ refetchInterval: 1000 }
+	);
 
-	function updateMetrics() {
-		getCurrentMetrics().then(metrics => setMetrics(metrics));
+	if (isLoading) {
+		return <h2>Loading...</h2>;
 	}
 
-	useEffect(() => {
-		updateMetrics();
-		const intervalId = setInterval(updateMetrics, 10000);
-		return () => clearInterval(intervalId);
-	}, []);
-
-	if (!metrics) {
-		return <h2>Loading...</h2>;
+	if (isError) {
+		return <h2>Error</h2>;
 	}
 
 	return (
@@ -28,7 +26,7 @@ function HealthMetrics() {
 			<div className={classes.cards}>
 				{
 					metrics.map((metric, i) => (
-						<MetricCard key={i} {...metric} />
+						<MetricCard key={i} metric={metric} />
 					))
 				}
 			</div>
