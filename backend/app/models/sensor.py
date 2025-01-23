@@ -2,17 +2,13 @@ from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from .datapoint import BaseDataPointModel
+from .colours_status_enum import ColourStatusEnum
 
 
 class SensorValueType(str, Enum):
     int = "int"
     float = "float"
     str = "str"
-
-class ColourStatusEnum(str, Enum):
-    red = "red"
-    amber = "amber"
-    green = "green"
 
 class ColourStatusBoundaryModel(BaseModel):
     threshold: float

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, Type, Union
 from pydantic import BaseModel
-from .sensor import ColourStatusEnum
+from .colours_status_enum import ColourStatusEnum
 from typing import Optional
 
 
