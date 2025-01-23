@@ -55,7 +55,7 @@ class HeartRateService : Service(), SensorEventListener {
             return
         }
 
-        if (event.accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
+        if (event.accuracy <= SensorManager.SENSOR_STATUS_UNRELIABLE) {
             sendHeartRateBroadcast("bad accuracy ${event.accuracy}")
             sendNotification("Bad HR ${event.accuracy}")
             return

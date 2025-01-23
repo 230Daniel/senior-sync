@@ -98,8 +98,8 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        unregisterReceiver(heartRateReceiver)
-        unregisterReceiver(statusReceiver)
+//        unregisterReceiver(heartRateReceiver)
+//        unregisterReceiver(statusReceiver)
     }
 
     private fun isInternetAvailable(): Boolean {
