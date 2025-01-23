@@ -1,12 +1,13 @@
 from datetime import datetime
 import os
 from typing import List, Optional
+from bson import ObjectId
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.collection import Collection
 
 
-from .models.alert import Alert
+from .models.alert import Alert, DatabaseAlert
 from .models.datapoint import DataPoint, DataPointModels
 from .models.sensor import Sensor
 
@@ -72,17 +73,17 @@ def get_all_datapoints(sensor: Sensor) -> List[DataPoint]:
 def add_alert(alert: Alert):
     Alerts.insert_one(alert.model_dump(by_alias=True))
 
-def update_alert(alert: Alert):
-    Alerts.replace_one({"_id": alert.id}, alert)
+def update_alert(alert: DatabaseAlert):
+    Alerts.replace_one({"_id": ObjectId(alert.id)}, alert.model_dump(by_alias=True))
 
-def get_active_alerts() -> List[Alert]:
+def get_active_alerts() -> List[DatabaseAlert]:
     return [
-        Alert(**result)
+        DatabaseAlert(**result)
         for result in Alerts.find({"is_active": True}).sort({"timestamp": -1})
     ]
 
-def get_active_alerts_for_sensor(sensor_id: str) -> List[Alert]:
+def get_active_alerts_for_sensor(sensor_id: str) -> List[DatabaseAlert]:
     return [
-        Alert(**result)
+        DatabaseAlert(**result)
         for result in Alerts.find({"sensor_id": sensor_id, "is_active": True}).sort({"timestamp": -1})
     ]

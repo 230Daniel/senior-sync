@@ -8,12 +8,14 @@ import pandas as pd
 from fastapi.responses import StreamingResponse # Add to Top
 from fastapi.encoders import jsonable_encoder
 
+from ..services.alert_generator import AlertGenerator
+
 from ..models.datapoint import CreateDataPoint, DataPoint, ColourDataPoint, DataPointModels
 from .. import database
 from ..models.sensor import SensorWithDatapoint
 
 router = APIRouter()
-
+alert_generator = AlertGenerator()
 
 @router.post(
     "/{sensor_id}",
@@ -54,6 +56,7 @@ async def record(sensor_id: str, data_point: CreateDataPoint = Body()):
         raise RequestValidationError(exc.errors())
 
     database.add_datapoint(sensor.id, data_point)
+    alert_generator.on_sensor_updated(sensor, data_point)
 
     return Response(status_code=status.HTTP_201_CREATED)
 
@@ -71,7 +74,6 @@ async def get_history(sensor_id: str, start_time: datetime, end_time: datetime =
     return data_points
 
 
-
 @router.get("/all", summary="Fetches current metrics from a sensor.")
 async def get_metrics() -> List[SensorWithDatapoint]:
     
@@ -85,8 +87,6 @@ async def get_metrics() -> List[SensorWithDatapoint]:
     
     return modelList
 
-
-
     
 @router.get("/{sensor_id}/export", summary="Creates a CSV file with all datapoints from this sensor.")
 async def get_export(sensor_id: str) -> StreamingResponse:
@@ -97,13 +97,9 @@ async def get_export(sensor_id: str) -> StreamingResponse:
 
     data_points = database.get_all_datapoints(sensor)
     data_points.sort(key=attrgetter("timestamp"))
-    df = pd.DataFrame((jsonable_encoder(data_points))
-        
-    )
+    df = pd.DataFrame((jsonable_encoder(data_points)))
     return StreamingResponse(
         iter([df.to_csv(index=False)]),
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=Export_{sensor_id}.csv"}
 )
-
-

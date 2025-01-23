@@ -22,7 +22,7 @@ class AlertGenerator(Singleton):
 
     @synchronized
     def on_sensor_updated(self, sensor: Sensor, data_point: DataPoint):
-        if recent_alert := next(get_active_alerts_for_sensor(sensor.id), None):
+        if recent_alert := next(iter(get_active_alerts_for_sensor(sensor.id)), None):
             if data_point.colour == "green":
                 self.deactivate_alert(recent_alert)
             return
@@ -60,4 +60,5 @@ class AlertGenerator(Singleton):
     def deactivate_alert(self, alert: Alert):
         alert.is_active = False
         update_alert(alert)
+        self.logger.info(alert.model_dump(by_alias=True))
         self.logger.info(f"Old alert {alert.id} for {alert.sensor_id} deactivated.")
