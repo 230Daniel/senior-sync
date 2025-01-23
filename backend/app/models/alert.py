@@ -11,3 +11,4 @@ class Alert(BaseModel):
 
 class DatabaseAlert(Alert):
     id: ObjectId = Field(alias="_id")
+    model_config = ConfigDict(arbitrary_types_allowed=True)

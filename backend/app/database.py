@@ -74,7 +74,7 @@ def add_alert(alert: Alert):
     Alerts.insert_one(alert.model_dump(by_alias=True))
 
 def update_alert(alert: DatabaseAlert):
-    Alerts.replace_one({"_id": ObjectId(alert.id)}, alert.model_dump(by_alias=True))
+    Alerts.replace_one({"_id": alert.id}, alert.model_dump(by_alias=True))
 
 def get_active_alerts() -> List[DatabaseAlert]:
     return [

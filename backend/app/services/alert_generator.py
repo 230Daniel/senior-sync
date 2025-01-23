@@ -60,5 +60,4 @@ class AlertGenerator(Singleton):
     def deactivate_alert(self, alert: Alert):
         alert.is_active = False
         update_alert(alert)
-        self.logger.info(alert.model_dump(by_alias=True))
         self.logger.info(f"Old alert {alert.id} for {alert.sensor_id} deactivated.")

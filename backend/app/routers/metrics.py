@@ -1,12 +1,14 @@
 from datetime import datetime
 from operator import attrgetter
-from typing import Any, List
-from fastapi import APIRouter, Body, HTTPException, Response, status
+from typing import List
+
+from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
+from fastapi.responses import StreamingResponse
+from fastapi.encoders import jsonable_encoder
+
 from pydantic import ValidationError
 import pandas as pd
-from fastapi.responses import StreamingResponse # Add to Top
-from fastapi.encoders import jsonable_encoder
 
 from ..services.alert_generator import AlertGenerator
 
@@ -22,7 +24,7 @@ alert_generator = AlertGenerator()
     summary="Records the the reading of a sensor with a timestamp.",
     status_code=status.HTTP_201_CREATED,
 )
-async def record(sensor_id: str, data_point: CreateDataPoint = Body()):
+async def record(background_tasks: BackgroundTasks, sensor_id: str, data_point: CreateDataPoint = Body()):
 
     if not (sensor := database.get_sensor(sensor_id)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
@@ -56,7 +58,7 @@ async def record(sensor_id: str, data_point: CreateDataPoint = Body()):
         raise RequestValidationError(exc.errors())
 
     database.add_datapoint(sensor.id, data_point)
-    alert_generator.on_sensor_updated(sensor, data_point)
+    background_tasks.add_task(alert_generator.on_sensor_updated, sensor, data_point)
 
     return Response(status_code=status.HTTP_201_CREATED)
 
