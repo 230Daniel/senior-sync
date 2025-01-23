@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List
-from pydantic import BaseModel, Field
+from typing import Optional
+from pydantic import BaseModel, Field, field_validator
 
 
 class SensorValueType(str, Enum):
@@ -15,8 +16,7 @@ class ColourStatusEnum(str, Enum):
     green = "green"
 
 class ColourStatusBoundaryModel(BaseModel):
-    low_value: int
-    high_value: int
+    threshold: float
     colour: ColourStatusEnum
 
 class SensorModel(BaseModel):

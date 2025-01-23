@@ -25,10 +25,17 @@ async def record_now(sensor_id: str, value: Any = Body()):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
     try:
-        for boundary in sensor.colour_status_boundaries:
-            if boundary.low_value <= value <= boundary.high_value:
-                colour = boundary.colour
-                break
+        thresholds = sensor.colour_status_boundaries
+        thresholds.sort(key=lambda x: x.threshold)
+
+        for i in range(len(thresholds)):
+            if i == 0 and value < thresholds[i].threshold:
+                colour = thresholds[i].colour
+            if i > 0 and thresholds[i-1].threshold <= value < thresholds[i].threshold:
+                colour = thresholds[i-1].colour
+            elif i == len(thresholds) -1 and value >= thresholds[i].threshold:
+                colour = thresholds[i].colour
+
         # Look up the appropriate DataPointModel type to use for this sensor and instantiate it.
         data_point = DataPointModels[sensor.value_type](
             timestamp=datetime.now(), value=value, colour=colour)
