@@ -1,6 +1,9 @@
 import { useQuery } from "react-query";
 import { getAlerts } from "../api/api";
 
+import classes from "./alerts.module.css";
+import { NavLink } from "react-router";
+
 export default function Alerts() {
     const { data: alerts, isLoading, isError } = useQuery([], getAlerts);
 
@@ -13,9 +16,10 @@ export default function Alerts() {
             {alerts.length == 0
                 ? <h2>There are no active alerts.</h2>
                 : alerts.map((alert, i) =>
-                    <div key={i}>
-                        {JSON.stringify(alert)}
-                    </div>
+                    <NavLink key={i} to={`/metric/${alert.sensor_id}`} className={classes.alert}>
+                        <strong>{new Date(alert.timestamp).toLocaleString()}</strong>
+                        {alert.message}
+                    </NavLink>
                 )}
         </div>
     );

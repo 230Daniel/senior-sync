@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
+
 from typing import List, Optional
-from bson import ObjectId
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.collection import Collection
