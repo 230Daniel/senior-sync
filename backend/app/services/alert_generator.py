@@ -13,7 +13,7 @@ from ..models.alert import Alert
 from ..models.sensor import Sensor
 from ..models.datapoint import DataPoint
 
-FRONTEND_URL = os.getenv("CORS_ALLOWED_ORIGINS")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 class AlertGenerator(Singleton):
     def __init__(self):
@@ -42,13 +42,13 @@ class AlertGenerator(Singleton):
 
         add_alert(alert)
 
-        sensor_url = urljoin(FRONTEND_URL, f"/metric/{sensor.id}")
-        alerts_url = urljoin(FRONTEND_URL, f"/alerts")
+        sensor_url = urljoin(FRONTEND_URL, f"metric/{sensor.id}")
+        alerts_url = urljoin(FRONTEND_URL, "alerts")
 
         self.email_sender.send_email(
             subject=f"ALERT: {alert.message}",
             body=(
-                "Hello,\n\n",
+                "Hello,\n\n"
                 f"On {to_human_time(data_point.timestamp)}, the {sensor.friendly_name} sensor "
                 f"detected a dangerous value of {data_point.value} {sensor.unit}.\n\n"
                 f"Find more details about this sensor at {sensor_url}.\n"
