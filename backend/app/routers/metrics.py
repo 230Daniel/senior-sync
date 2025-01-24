@@ -8,7 +8,7 @@ import pandas as pd
 from fastapi.responses import StreamingResponse # Add to Top
 from fastapi.encoders import jsonable_encoder
 
-from ..models.datapoint import BaseDataPointModel, DataPointModels
+from ..models.datapoint import BaseDataPointModel, DataPointModels, ColourDataPointModel
 from .. import database
 from ..models.sensor import SensorWithDatapointModel
 
