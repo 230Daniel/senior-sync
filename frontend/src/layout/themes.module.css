@@ -72,16 +72,6 @@
 
 .selector {
 	all: unset;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	cursor: pointer;
-
-	&:hover {
-		transform: scale(1.25);
-	}
-
-	&:focus {
-		outline: revert
-	}
+	font-size: 32px;
 }
