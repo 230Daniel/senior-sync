@@ -8,7 +8,7 @@ function MetricCard({ metric }) {
 	const isStale = metric.value == null || new Date(metric.value.timestamp) < new Date(Date.now() - 60 * 1000);
 	const value = isStale ? "No data" : metric.value.value;
 	const unit = isStale ? "" : metric.unit;
-	const status = isStale ? "gray" : "green"; // TODO: Use colour value from metric.value
+	const status = isStale ? "gray" : metric.value.colour;
 
 	const textLength = String(value).length;
 	const fontSize = (3 - Math.max(textLength - 3, 0) * 0.25) + "em";
