@@ -1,3 +1,10 @@
+.wrapper {
+    box-sizing: border-box;
+    position: relative;
+    padding-bottom: 10em; /* Height of footer */
+    min-height: 100vh;
+}
+
 .header {
     display: flex;
     height: 65px;
@@ -63,4 +70,19 @@
 		outline: revert
 	}
     
+}
+
+Footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: unset;
+  background-color: var(--theme-col-nav);
+  box-shadow: 0 5px 10px var(--theme-col-shadow);
+  border-bottom: var(--theme-border);
+ 
+  
+  
+  
+  
 }
