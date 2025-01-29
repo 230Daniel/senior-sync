@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 from typing import List, Optional
 from dotenv import load_dotenv
-from pymongo import MongoClient
+import pymongo
 from pymongo.collection import Collection
 
 
@@ -11,7 +11,7 @@ from .models.datapoint import DataPoint, DataPointModels
 from .models.sensor import Sensor
 
 load_dotenv()
-client = MongoClient(os.environ["MONGO_HOST"])
+client = pymongo.MongoClient(os.environ["MONGO_HOST"])
 db = client["senior_sync"]
 
 Sensors = db["sensors"]
