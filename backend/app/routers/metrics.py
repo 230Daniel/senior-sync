@@ -18,7 +18,7 @@ router = APIRouter()
 @router.post(
     "/{sensor_id}",
     summary="Records the the reading of a sensor with a timestamp.",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_201_CREATED
 )
 async def record(sensor_id: str, data_point: CreateDataPoint = Body(), db: Database = Depends(get_db)):
 

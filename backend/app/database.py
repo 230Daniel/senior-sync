@@ -2,16 +2,16 @@ from datetime import datetime
 import os
 from typing import List, Optional
 
-from pymongo import MongoClient
+import pymongo
 from pymongo.collection import Collection
 
 from .models.datapoint import DataPoint, DataPointModels
 from .models.sensor import Sensor
 
 class Database:
-    def __init__(self, client: MongoClient):
+    def __init__(self, client: pymongo.MongoClient):
         self.client = client
-        self.db: Database = self.client["senior_sync"]
+        self.db = self.client["senior_sync"]
         self.sensors: Collection = self.db["sensors"]
 
     def get_datapoints_collection(self, sensor_id: str) -> Collection:
@@ -59,5 +59,5 @@ class Database:
         ]
 
 def get_db():
-    with MongoClient(os.environ["MONGO_HOST"]) as client:
+    with pymongo.MongoClient(os.environ["MONGO_HOST"]) as client:
         yield Database(client)
