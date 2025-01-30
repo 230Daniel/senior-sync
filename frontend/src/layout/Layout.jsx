@@ -2,13 +2,11 @@ import { NavLink, Outlet } from 'react-router';
 import classes from './layout.module.css';
 
 import { ThemeSelector } from './ThemeSelector';
+import { AlertsIcon } from '../pages/Alerts';
 import { GiHelp } from "react-icons/gi";
 
+
 function Layout() {
-	
-
-
-
 	return (
 		<>
 			<header className={classes.header}>
@@ -25,10 +23,13 @@ function Layout() {
 						</svg>
 						Senior Sync
 					</NavLink>
-					<div className={classes.themeSelector}>
+					<div className={classes.icons}>
+						<AlertsIcon />
 						<ThemeSelector />
+						<NavLink to="/userguide" className={classes.helpIcon}>
+							<GiHelp title='Press for help' />
+						</NavLink>
 					</div>
-					<NavLink to="/UserGuide" className={classes.helpIcon}><GiHelp  title='Press for help'/></NavLink>
 				</div>
 			</header>
 			<main>

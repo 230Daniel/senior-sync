@@ -1,3 +1,4 @@
+from datetime import datetime
 from health_data import HealthData
 import time
 import keyboard
@@ -26,14 +27,14 @@ def main():
 
     match sensor:
         case 'O2':
-            api_post_data_endpoint = "http://localhost:8000/api/metrics/o2_level/now"
+            api_post_data_endpoint = "http://localhost:8000/api/metrics/o2_level"
             id = "o2_level"
             friendly_name = "O2 Level"
             unit = "%"
             value_type = "int"
 
         case 'heart':
-            api_post_data_endpoint = "http://localhost:8000/api/metrics/heart_rate/now"
+            api_post_data_endpoint = "http://localhost:8000/api/metrics/heart_rate"
             id = "heart_rate"
             friendly_name = "Heart Rate"
             unit = "bpm"
@@ -88,7 +89,10 @@ def main():
                 case 'heart':
                     print(f"Current Heart Rate: {value} bpm", end="\r")
 
-            response = requests.post(api_post_data_endpoint, json=value)
+            response = requests.post(api_post_data_endpoint, json={
+                "timestamp": datetime.now().isoformat(),
+                "value": value
+            })
             response.raise_for_status()
             time.sleep(2)
     except KeyboardInterrupt:
