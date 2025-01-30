@@ -37,14 +37,15 @@ function Layout() {
 						<Outlet />
 					</div>
 				</main>
+			</div>
 				<footer>
-					<div className='Footer'>
+					<div className={classes.footer}>
 					<Footer /> 
 					</div>
 					
 				</footer>
 				
-			</div>
+			
 			
 			
 		</>
