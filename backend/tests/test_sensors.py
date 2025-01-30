@@ -25,9 +25,7 @@ def test_add_str_sensor(test_client: TestClient, test_db: Database):
     sensors = list(test_db.sensors.find({}))
 
     assert len(sensors) == 1
-    assert sensors[0] == TEST_STR_SENSOR | {
-        "colour_status_boundaries": None
-    }
+    assert sensors[0] == TEST_STR_SENSOR
 
 
 def test_add_heart_rate_sensor(test_client: TestClient, test_db: Database):
