@@ -4,6 +4,7 @@ import os
 from urllib.parse import urljoin
 
 import pymongo
+import pytz
 from wrapt import synchronized
 
 from .email_sender import EmailSender
@@ -28,8 +29,10 @@ class AlertGenerator(metaclass=Singleton):
             if data_point.colour == "green":
                 self.deactivate_alert(recent_alert)
             return
+        
+        timestamp = data_point.timestamp if data_point.timestamp.tzinfo else pytz.utc.localize(data_point.timestamp)
 
-        if data_point.colour == "red" and data_point.timestamp > datetime.now(timezone.utc) - timedelta(minutes=1):
+        if data_point.colour == "red" and timestamp > datetime.now(timezone.utc) - timedelta(minutes=1):
             self.new_alert(sensor, data_point)
 
     def new_alert(self, sensor: Sensor, data_point: DataPoint):
