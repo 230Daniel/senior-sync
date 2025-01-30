@@ -2,6 +2,8 @@ import copy
 from fastapi.testclient import TestClient
 import mongomock
 import pytest
+from pydantic._internal._generate_schema import GenerateSchema
+from pydantic_core import core_schema
 
 from app.main import app
 from app.database import get_db, Database
@@ -82,3 +84,12 @@ def test_heart_rate_datapoints(test_db: Database, test_heart_rate_sensor):
     test_db.sensors.delete_many({ "_id": {
         "$in": [[datapoint["_id"] for datapoint in TEST_HEART_RATE_DATAPOINTS]]
     }})
+
+
+# Fix for PydanticSchemaGenerationError when using Freezegun
+initial_match_type = GenerateSchema.match_type
+def match_type(self, obj):
+    if getattr(obj, "__name__", None) == "datetime":
+        return core_schema.datetime_schema()
+    return initial_match_type(self, obj)
+GenerateSchema.match_type = match_type

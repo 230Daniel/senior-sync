@@ -3,3 +3,4 @@ httpx
 mongomock
 coverage
 pytest-timeout
+freezegun
