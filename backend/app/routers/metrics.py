@@ -1,6 +1,6 @@
 from datetime import datetime
 from operator import attrgetter
-from typing import List
+from typing import List, Union
 
 from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
@@ -14,9 +14,22 @@ from ..services.alert_generator import AlertGenerator, get_alert_generator
 
 from ..database import Database, get_db
 from ..models.datapoint import CreateDataPoint, DataPoint, DataPointModels
-from ..models.sensor import SensorWithDatapoint
+from ..models.sensor import Sensor, SensorWithDatapoint
 
 router = APIRouter()
+
+def get_value_colour(sensor: Sensor, value: Union[int, float]) -> str:
+    thresholds = sensor.colour_status_boundaries
+    thresholds.sort(key=lambda x: x.threshold)
+
+    for i in range(len(thresholds)):
+        if i == 0 and value < thresholds[i].threshold:
+            return thresholds[i].colour
+        if i > 0 and thresholds[i-1].threshold <= value < thresholds[i].threshold:
+            return thresholds[i-1].colour
+        elif i == len(thresholds) -1 and value >= thresholds[i].threshold:
+            return thresholds[i].colour
+
 
 @router.post(
     "/{sensor_id}",
@@ -41,22 +54,11 @@ async def record(
             timestamp=data_point.timestamp,
         )
         else:
-            thresholds = sensor.colour_status_boundaries
-            thresholds.sort(key=lambda x: x.threshold)
-
-            for i in range(len(thresholds)):
-                if i == 0 and data_point.value < thresholds[i].threshold:
-                    colour = thresholds[i].colour
-                if i > 0 and thresholds[i-1].threshold <= data_point.value < thresholds[i].threshold:
-                    colour = thresholds[i-1].colour
-                elif i == len(thresholds) -1 and data_point.value >= thresholds[i].threshold:
-                    colour = thresholds[i].colour
-
             # Convert to the appropriate DataPointModel type for this sensor.
             data_point = data_point_type(
                 value=data_point.value,
                 timestamp=data_point.timestamp,
-                colour=colour
+                colour=get_value_colour(sensor, data_point.value)
             )
     except ValidationError as exc:
         raise RequestValidationError(exc.errors())
@@ -127,14 +129,19 @@ async def mass_import(sensor_id: str, data_points: List[CreateDataPoint] = Body(
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
     try:
-        # Convert to the appropriate DataPointModel type for this sensor.
-        data_points = [
-            DataPointModels[sensor.value_type](
+        data_point_type = DataPointModels[sensor.value_type]
+        if type(data_point.value) == str:
+            data_point = data_point_type(
+            value=data_point.value,
+            timestamp=data_point.timestamp,
+        )
+        else:
+            # Convert to the appropriate DataPointModel type for this sensor.
+            data_point = data_point_type(
                 value=data_point.value,
-                timestamp=data_point.timestamp
+                timestamp=data_point.timestamp,
+                colour=get_value_colour(sensor, data_point.value)
             )
-            for data_point in data_points
-        ]
     except ValidationError as exc:
         raise RequestValidationError(exc.errors())
 
