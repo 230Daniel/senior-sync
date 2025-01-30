@@ -26,7 +26,8 @@ TEST_HEART_RATE_SENSOR = {
             "threshold": 200,
             "colour": "red"
         }
-    ]
+    ],
+    "continuous_within_seconds": 60
 }
 
 TEST_STRING_SENSOR = {
@@ -34,7 +35,8 @@ TEST_STRING_SENSOR = {
     "friendly_name": "Test String Sensor",
     "unit": "passes",
     "value_type": "str",
-    "colour_status_boundaries": None
+    "colour_status_boundaries": None,
+    "continuous_within_seconds": 0
 }
 
 TEST_HEART_RATE_DATAPOINTS = [
