@@ -56,8 +56,8 @@ export function ThemeSelector() {
 	return (
 		<>
 			{/* Render a div with the current theme class, this will set variables on :root due to the CSS :root:has(.theme). */}
-			<div className={theme.className} />
 			<button className={classes.selector} onClick={() => setThemeIndex(nextThemeIndex)}>
+				<div className={theme.className} />
 				<nextTheme.icon title={nextTheme.name} />
 			</button>
 		</>

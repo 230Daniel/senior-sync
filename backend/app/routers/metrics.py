@@ -1,26 +1,34 @@
 from datetime import datetime
 from operator import attrgetter
-from typing import Any, List
-from fastapi import APIRouter, Body, Depends, HTTPException, Response, status
+from typing import List
+
+from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
-from pydantic import ValidationError
-import pandas as pd
 from fastapi.responses import StreamingResponse
 from fastapi.encoders import jsonable_encoder
 
+from pydantic import ValidationError
+import pandas as pd
+
+from ..services.alert_generator import AlertGenerator, get_alert_generator
+
 from ..database import Database, get_db
-from ..models.datapoint import CreateDataPoint, DataPoint, ColourDataPoint, DataPointModels
+from ..models.datapoint import CreateDataPoint, DataPoint, DataPointModels
 from ..models.sensor import SensorWithDatapoint
 
 router = APIRouter()
-
 
 @router.post(
     "/{sensor_id}",
     summary="Records the the reading of a sensor with a timestamp.",
     status_code=status.HTTP_201_CREATED
 )
-async def record(sensor_id: str, data_point: CreateDataPoint = Body(), db: Database = Depends(get_db)):
+async def record(
+    background_tasks: BackgroundTasks,
+    sensor_id: str,
+    data_point: CreateDataPoint = Body(),
+    db: Database = Depends(get_db),
+    alert_generator: AlertGenerator = Depends(get_alert_generator)):
 
     if not (sensor := db.get_sensor(sensor_id)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
@@ -54,6 +62,7 @@ async def record(sensor_id: str, data_point: CreateDataPoint = Body(), db: Datab
         raise RequestValidationError(exc.errors())
 
     db.add_datapoint(sensor.id, data_point)
+    background_tasks.add_task(alert_generator.on_sensor_updated, sensor, data_point)
 
     return Response(status_code=status.HTTP_201_CREATED)
 
@@ -76,7 +85,6 @@ async def get_history(
     return data_points
 
 
-
 @router.get("/all", summary="Fetches current metrics from a sensor.")
 async def get_metrics(db: Database = Depends(get_db)) -> List[SensorWithDatapoint]:
     
@@ -90,8 +98,6 @@ async def get_metrics(db: Database = Depends(get_db)) -> List[SensorWithDatapoin
     
     return modelList
 
-
-
     
 @router.get("/{sensor_id}/export", summary="Creates a CSV file with all datapoints from this sensor.")
 async def get_export(sensor_id: str, db: Database = Depends(get_db)) -> StreamingResponse:
@@ -102,9 +108,7 @@ async def get_export(sensor_id: str, db: Database = Depends(get_db)) -> Streamin
 
     data_points = db.get_all_datapoints(sensor)
     data_points.sort(key=attrgetter("timestamp"))
-    df = pd.DataFrame((jsonable_encoder(data_points))
-        
-    )
+    df = pd.DataFrame((jsonable_encoder(data_points)))
     return StreamingResponse(
         iter([df.to_csv(index=False)]),
         media_type="text/csv",
@@ -137,6 +141,3 @@ async def mass_import(sensor_id: str, data_points: List[CreateDataPoint] = Body(
     db.add_mass_data(sensor.id, data_points)
 
     return Response(status_code=status.HTTP_201_CREATED)
-
-
-

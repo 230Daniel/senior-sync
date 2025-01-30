@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
 function HealthMetrics() {
 
 	const { data: metrics, isError, isLoading } = useQuery(
-		[],
+		["getAllMetrics"],
 		getAllMetrics,
 		{ refetchInterval: 1000 }
 	);

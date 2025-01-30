@@ -5,6 +5,7 @@ import pytest
 
 from app.main import app
 from app.database import get_db, Database
+from app.services.alert_generator import AlertGenerator, get_alert_generator
 
 from .constants import TEST_HEART_RATE_DATAPOINTS, TEST_HEART_RATE_SENSOR, TEST_STRING_SENSOR
 
@@ -25,10 +26,18 @@ def test_db():
         def get_test_db():
             yield Database(client)
 
+        def get_test_alert_generator():
+            alert_generator = AlertGenerator(Database(client))
+            yield alert_generator
+
+
         app.dependency_overrides[get_db] = get_test_db
+        app.dependency_overrides[get_alert_generator] = get_test_alert_generator
         yield client["senior_sync"]
 
     app.dependency_overrides.pop(get_db)
+    app.dependency_overrides.pop(get_alert_generator)
+
 
 @pytest.fixture(scope="function")
 def test_sensors(test_db: Database):

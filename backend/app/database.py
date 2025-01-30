@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+
 from typing import List, Optional
 
 import pymongo
@@ -7,12 +8,14 @@ from pymongo.collection import Collection
 
 from .models.datapoint import DataPoint, DataPointModels
 from .models.sensor import Sensor
+from .models.alert import Alert, DatabaseAlert
 
 class Database:
     def __init__(self, client: pymongo.MongoClient):
         self.client = client
         self.db = self.client["senior_sync"]
         self.sensors: Collection = self.db["sensors"]
+        self.alerts: Collection = self.db["alerts"]
 
     def get_datapoints_collection(self, sensor_id: str) -> Collection:
         return self.db[f"sensor-datapoints-{sensor_id}"]
@@ -64,6 +67,25 @@ class Database:
             data_point.model_dump(by_alias=True)
             for data_point in datapoints
         ])
+    
+    
+    def add_alert(self, alert: Alert):
+        self.alerts.insert_one(alert.model_dump(by_alias=True))
+
+    def update_alert(self, alert: DatabaseAlert):
+        self.alerts.replace_one({"_id": alert.id}, alert.model_dump(by_alias=True))
+
+    def get_active_alerts(self) -> List[DatabaseAlert]:
+        return [
+            DatabaseAlert(**result)
+            for result in self.alerts.find({"is_active": True}).sort({"timestamp": -1})
+        ]
+
+    def get_active_alerts_for_sensor(self, sensor_id: str) -> List[DatabaseAlert]:
+        return [
+            DatabaseAlert(**result)
+            for result in self.alerts.find({"sensor_id": sensor_id, "is_active": True}).sort({"timestamp": -1})
+        ]
 
 def get_db():
     with pymongo.MongoClient(os.environ["MONGO_HOST"]) as client:

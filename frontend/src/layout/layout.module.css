@@ -8,11 +8,6 @@
     margin-bottom: 2em;
 }
 
-.themeSelector {
-    font-size: 30px;
-    margin-left: auto;
-}
-
 .brand {
     display: flex;
     height: 100%;
@@ -47,20 +42,31 @@
     fill: var(--theme-col-primary-contrast);
 }
 
-.helpIcon {
-    color: unset;
-    margin-left: 20px;
+
+.icons {
     font-size: 30px;
-    width: 1em;
-    height: 1.3em;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.icons>* {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 20px;
+    color: unset;
+
+
 
     &:hover {
-		transform: scale(1.25);
+        transform: scale(1.25);
         color: unset;
-	}
+    }
 
-	&:focus {
-		outline: revert
-	}
-    
+    &:focus {
+        outline: revert
+    }
 }

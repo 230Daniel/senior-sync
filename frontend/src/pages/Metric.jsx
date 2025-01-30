@@ -15,7 +15,7 @@ export default function MetricPage() {
 
 	const { metricId } = useParams();
 
-	const { data: metric, isLoading, isError } = useQuery([metricId],
+	const { data: metric, isLoading, isError } = useQuery(["getSensor", metricId],
 		async () => {
 			return await getSensor(metricId);
 		}
@@ -56,12 +56,12 @@ export default function MetricPage() {
 			</p>
 
 			<div className={classes.exportcontainer}>
-				<a className={classes.export} 
-				href={new URL(`metrics/${metric._id}/export`,Backend).toString()} 
-				download={`Export_${metric._id}.csv`}
-				> 
+				<a className={classes.export}
+					href={new URL(`metrics/${metric._id}/export`, Backend).toString()}
+					download={`Export_${metric._id}.csv`}
+				>
 					Export to CSV
-				</a> 
+				</a>
 			</div>
 		</>
 	);
