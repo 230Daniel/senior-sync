@@ -35,7 +35,7 @@ class AlertGenerator(metaclass=Singleton):
         if data_point.colour == "red" and timestamp > datetime.now(timezone.utc) - timedelta(minutes=1):
             self.new_alert(sensor, data_point)
 
-    def new_alert(self, sensor: Sensor, data_point: DataPoint):
+    def new_alert(self, sensor: Sensor, data_point: DataPoint): 
         self.logger.info(f"New alert for {sensor.id}.")
 
         alert = Alert(
