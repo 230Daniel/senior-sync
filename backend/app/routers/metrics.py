@@ -13,7 +13,7 @@ import pandas as pd
 from ..services.alert_generator import AlertGenerator, get_alert_generator
 
 from ..database import Database, get_db
-from ..models.datapoint import CreateDataPoint, DataPoint, DataPointModels
+from ..models.datapoint import ColourDataPoint, CreateDataPoint, DataPoint, DataPointModels, CreateDataPointModels
 from ..models.sensor import Sensor, SensorWithDatapoint
 
 router = APIRouter()
@@ -35,18 +35,27 @@ def get_data_point(sensor: Sensor, data_point: CreateDataPoint) -> DataPoint:
     Convert to the appropriate DataPointModel type for this sensor.
     """
     try:
+        create_data_point_type = CreateDataPointModels[sensor.value_type]
         data_point_type = DataPointModels[sensor.value_type]
 
-        if type(data_point.value) == str:
-            return data_point_type(
+        # Validate type
+        data_point = create_data_point_type(
             value=data_point.value,
-            timestamp=data_point.timestamp,
+            timestamp=data_point.timestamp
         )
 
+        # Create model with colour if necessary.
+        if issubclass(data_point_type, ColourDataPoint):
+            return data_point_type(
+                value=data_point.value,
+                timestamp=data_point.timestamp,
+                colour=get_value_colour(sensor, data_point.value)
+            )
+
+        # Create model without colour
         return data_point_type(
             value=data_point.value,
-            timestamp=data_point.timestamp,
-            colour=get_value_colour(sensor, data_point.value)
+            timestamp=data_point.timestamp
         )
 
     except ValidationError as exc:
