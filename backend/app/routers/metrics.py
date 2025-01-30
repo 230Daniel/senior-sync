@@ -30,6 +30,27 @@ def get_value_colour(sensor: Sensor, value: Union[int, float]) -> str:
         elif i == len(thresholds) -1 and value >= thresholds[i].threshold:
             return thresholds[i].colour
 
+def get_data_point(sensor: Sensor, data_point: CreateDataPoint) -> DataPoint:
+    """
+    Convert to the appropriate DataPointModel type for this sensor.
+    """
+    try:
+        data_point_type = DataPointModels[sensor.value_type]
+
+        if type(data_point.value) == str:
+            return data_point_type(
+            value=data_point.value,
+            timestamp=data_point.timestamp,
+        )
+
+        return data_point_type(
+            value=data_point.value,
+            timestamp=data_point.timestamp,
+            colour=get_value_colour(sensor, data_point.value)
+        )
+
+    except ValidationError as exc:
+        raise RequestValidationError(exc.errors())
 
 @router.post(
     "/{sensor_id}",
@@ -46,23 +67,7 @@ async def record(
     if not (sensor := db.get_sensor(sensor_id)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
-    try:
-        data_point_type = DataPointModels[sensor.value_type]
-        if type(data_point.value) == str:
-            data_point = data_point_type(
-            value=data_point.value,
-            timestamp=data_point.timestamp,
-        )
-        else:
-            # Convert to the appropriate DataPointModel type for this sensor.
-            data_point = data_point_type(
-                value=data_point.value,
-                timestamp=data_point.timestamp,
-                colour=get_value_colour(sensor, data_point.value)
-            )
-    except ValidationError as exc:
-        raise RequestValidationError(exc.errors())
-
+    data_point = get_data_point(sensor, data_point)
     db.add_datapoint(sensor.id, data_point)
     background_tasks.add_task(alert_generator.on_sensor_updated, sensor, data_point)
 
@@ -128,22 +133,10 @@ async def mass_import(sensor_id: str, data_points: List[CreateDataPoint] = Body(
     if not (sensor := db.get_sensor(sensor_id)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
 
-    try:
-        data_point_type = DataPointModels[sensor.value_type]
-        if type(data_point.value) == str:
-            data_point = data_point_type(
-            value=data_point.value,
-            timestamp=data_point.timestamp,
-        )
-        else:
-            # Convert to the appropriate DataPointModel type for this sensor.
-            data_point = data_point_type(
-                value=data_point.value,
-                timestamp=data_point.timestamp,
-                colour=get_value_colour(sensor, data_point.value)
-            )
-    except ValidationError as exc:
-        raise RequestValidationError(exc.errors())
+    data_points = [
+        get_data_point(sensor, data_point)
+        for data_point in data_points
+    ]
 
     db.add_mass_data(sensor.id, data_points)
 
