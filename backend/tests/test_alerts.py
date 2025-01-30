@@ -54,7 +54,19 @@ def test_alert_deactivated(test_client: TestClient, test_db: Database, test_hear
 
     expected_alerts = [HEART_RATE_ALERT | {"_id": ANY, "is_active": False}]
 
-    print(id(test_db))
     alerts = list(test_db.alerts.find({}))
 
     TestCase().assertCountEqual(expected_alerts, alerts)
+
+@freeze_time(datetime(2025, 1, 2))
+def test_alert_not_made_old_timestamp(test_client: TestClient, test_db: Database, test_heart_rate_sensor: Dict):
+    sensor_id = test_heart_rate_sensor["_id"]
+
+    response = test_client.post(f"/api/metrics/{sensor_id}", json={
+        "timestamp": datetime(2025, 1, 1).isoformat(),
+        "value": 0
+    })
+    assert response.status_code == 201
+
+    alerts = list(test_db.alerts.find({}))
+    TestCase().assertCountEqual([], alerts)
