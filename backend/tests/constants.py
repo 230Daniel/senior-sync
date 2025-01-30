@@ -37,18 +37,6 @@ TEST_STR_SENSOR = {
     "colour_status_boundaries": None
 }
 
-TEST_HEART_RATE_DATAPOINT = {
-    "_id": 1,
-    "timestamp": datetime(2025, 1, 1),
-    "value": 100,
-    "colour": "green"
-}
-
-TEST_CREATE_HEART_RATE_DATAPOINT = {
-    "timestamp": datetime(2025, 1, 1).isoformat(),
-    "value": 100
-}
-
 TEST_HEART_RATE_DATAPOINTS = [
     {
         "_id": 1,
@@ -78,6 +66,12 @@ TEST_HEART_RATE_DATAPOINTS = [
         "_id": 5,
         "timestamp": datetime(2025, 1, 5),
         "value": 9000,
+        "colour": "red"
+    },
+    {
+        "_id": 6,
+        "timestamp": datetime(2025, 1, 6),
+        "value": -18,
         "colour": "red"
     }
 ]
