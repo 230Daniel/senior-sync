@@ -37,55 +37,59 @@ jobs:
       name: Upload coverage report
       uses: actions/upload-artifact@v3
       with:
-        name: coverage
+        name: coverage.zip
         path: backend/htmlcov/*
 
-  # build-backend:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   -
-  #     name: Checkout
-  #     uses: actions/checkout@v3
-  #   -
-  #     name: Set up Docker Buildx
-  #     uses: docker/setup-buildx-action@v2
-  #   -
-  #     name: Login to Docker Hub
-  #     uses: docker/login-action@v2
-  #     with:
-  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #       password: ${{ secrets.DOCKERHUB_TOKEN }}
-  #   -
-  #     name: Build and push
-  #     uses: docker/build-push-action@v4
-  #     with:
-  #       context: ./backend
-  #       file: ./backend/Dockerfile
-  #       platforms: linux/amd64,linux/arm64
-  #       tags: 230daniel/private:senior-sync-backend
-  #       push: ${{ env.DO_PUSH }}
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    -
+      name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    -
+      name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        tags: 230daniel/private:senior-sync-backend
+        push: ${{ env.DO_PUSH }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-  # build-frontend:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   -
-  #     name: Checkout
-  #     uses: actions/checkout@v3
-  #   -
-  #     name: Set up Docker Buildx
-  #     uses: docker/setup-buildx-action@v2
-  #   -
-  #     name: Login to Docker Hub
-  #     uses: docker/login-action@v2
-  #     with:
-  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #       password: ${{ secrets.DOCKERHUB_TOKEN }}
-  #   -
-  #     name: Build and push
-  #     uses: docker/build-push-action@v4
-  #     with:
-  #       context: ./frontend
-  #       file: ./frontend/Dockerfile
-  #       platforms: linux/amd64,linux/arm64
-  #       tags: 230daniel/private:senior-sync-frontend
-  #       push: ${{ env.DO_PUSH }}
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    -
+      name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    -
+      name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        tags: 230daniel/private:senior-sync-frontend
+        push: ${{ env.DO_PUSH }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
