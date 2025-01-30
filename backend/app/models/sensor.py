@@ -14,6 +14,7 @@ class Sensor(BaseModel):
     unit: str
     value_type: SensorValueType
     colour_status_boundaries: Optional[List[ColourStatusBoundary]] = None
+    continuous_within_seconds: int = 120
 
 class SensorWithDatapoint(Sensor):
     value: Optional[DataPoint] = None
