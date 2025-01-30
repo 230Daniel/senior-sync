@@ -4,13 +4,17 @@ from datetime import datetime
 with open ("Output.json","r") as file:
     records=json.load(file)
 
-for sensor_type in ["HKQuantityTypeIdentifierOxygenSaturation","QuantityTypeIdentifierVO2Max","HKQuantityTypeIdentifierRespiratoryRate"]:
+for sensor_type in ["HKQuantityTypeIdentifierOxygenSaturation",
+                    "HKQuantityTypeIdentifierRespiratoryRate",
+                    "HKQuantityTypeIdentifierHeartRate",
+                    "HKQuantityTypeIdentifierRestingHeartRate",
+                    ]:
     datapoints=[]
 
     for record in records:
-        if record["startDate"] > "2020" and record["type"] == sensor_type:
+        if record["startDate"] > "2015" and record["type"] == sensor_type:
             datapoint={
-                "value":record["value"], 
+                "value":float(record["value"]) * 100, 
                 "timestamp":datetime.strptime(record["startDate"],"%Y-%m-%d %H:%M:%S %z").isoformat()
             }
             datapoints.append(datapoint)
