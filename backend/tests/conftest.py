@@ -29,6 +29,7 @@ def test_db():
             yield Database(client)
 
         def get_test_alert_generator():
+            AlertGenerator.clear()
             alert_generator = AlertGenerator(Database(client))
             yield alert_generator
 
@@ -46,27 +47,24 @@ def test_sensors(test_db: Database):
     """
     Fixture for tests that expect sensors to exist in the database already.
     """
-    sensors = [
+    sensors = copy.deepcopy([
         TEST_HEART_RATE_SENSOR,
         TEST_STRING_SENSOR
-    ]
+    ])
 
     test_db.sensors.insert_many(sensors)
 
     yield sensors
 
-    test_db.sensors.delete_many({ "_id": {
-        "$in": [[sensor["_id"] for sensor in sensors]]
-    }})
 
 @pytest.fixture(scope="function")
 def test_heart_rate_sensor(test_sensors):
-    yield TEST_HEART_RATE_SENSOR
+    yield copy.deepcopy(TEST_HEART_RATE_SENSOR)
 
 
 @pytest.fixture(scope="function")
 def test_string_sensor(test_sensors):
-    yield TEST_STRING_SENSOR
+    yield copy.deepcopy(TEST_STRING_SENSOR)
 
 
 @pytest.fixture(scope="function")
@@ -80,10 +78,6 @@ def test_heart_rate_datapoints(test_db: Database, test_heart_rate_sensor):
         data_point.pop("_id") and data_point | { "timestamp": data_point["timestamp"].isoformat() }
         for data_point in copy.deepcopy(TEST_HEART_RATE_DATAPOINTS)
     ]
-
-    test_db.sensors.delete_many({ "_id": {
-        "$in": [[datapoint["_id"] for datapoint in TEST_HEART_RATE_DATAPOINTS]]
-    }})
 
 
 # Fix for PydanticSchemaGenerationError when using Freezegun

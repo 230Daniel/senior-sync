@@ -117,3 +117,10 @@ TEST_ALERTS = [
         "message": "Test active non-active message"
     }
 ]
+
+HEART_RATE_ALERT = {
+    'sensor_id': 'heart_rate',
+    'timestamp': datetime(2025, 1, 1, 0, 0),
+    'is_active': True,
+    'message': 'The Heart Rate sensor detected a dangerous value of 0 BPM.'
+}

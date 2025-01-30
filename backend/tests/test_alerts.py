@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from freezegun import freeze_time
 from mongomock import Database
 
-from .constants import TEST_ALERTS
+from .constants import HEART_RATE_ALERT, TEST_ALERTS
 
 
 @freeze_time(datetime(2025, 1, 1))
@@ -35,14 +35,26 @@ def test_add_alert(test_client: TestClient, test_db: Database, test_heart_rate_s
     })
     assert response.status_code == 201
 
-    expected_alerts = [{
-        'sensor_id': 'heart_rate',
-        'timestamp': datetime(2025, 1, 1, 0, 0),
-        'is_active': True,
-        'message': 'The Heart Rate sensor detected a dangerous value of 0 BPM.',
-        '_id': ANY
-    }]
+    expected_alerts = [HEART_RATE_ALERT | {"_id": ANY}]
 
+    alerts = list(test_db.alerts.find({}))
+
+    TestCase().assertCountEqual(expected_alerts, alerts)
+
+@freeze_time(datetime(2025, 1, 1))
+def test_alert_deactivated(test_client: TestClient, test_db: Database, test_heart_rate_sensor: Dict):
+    test_db.alerts.insert_one(copy.deepcopy(HEART_RATE_ALERT))
+    sensor_id = test_heart_rate_sensor["_id"]
+
+    response = test_client.post(f"/api/metrics/{sensor_id}", json={
+        "timestamp": datetime(2025, 1, 1).isoformat(),
+        "value": 60
+    })
+    assert response.status_code == 201
+
+    expected_alerts = [HEART_RATE_ALERT | {"_id": ANY, "is_active": False}]
+
+    print(id(test_db))
     alerts = list(test_db.alerts.find({}))
 
     TestCase().assertCountEqual(expected_alerts, alerts)
