@@ -67,3 +67,12 @@ def get_all_datapoints(sensor: SensorModel) -> List[BaseDataPointModel]:
         model_type(**result)
         for result in results
     ]
+
+
+
+def add_mass_data(sensor_id: str, datapoints: List[BaseDataPointModel]):
+    collection = __get_datapoints_collection(sensor_id)
+    collection.insert_many([
+        data_point.model_dump(by_alias=True)
+        for data_point in datapoints
+    ])
