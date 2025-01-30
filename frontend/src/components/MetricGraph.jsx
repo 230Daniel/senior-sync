@@ -23,7 +23,7 @@ export default function MetricGraph({ metric, valueType, timeRange, onTimeRangeS
 	}, [timeRange]);
 
 	const { data: dataPoints, error, isLoading } = useQuery(
-		[metric._id, maxTimeRange],
+		["getMetricHistory", metric._id, maxTimeRange],
 		async () => {
 			return await getMetricHistory(metric._id, maxTimeRange[0], maxTimeRange[1]);
 		},

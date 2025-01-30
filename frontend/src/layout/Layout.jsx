@@ -2,13 +2,10 @@ import { NavLink, Outlet } from 'react-router';
 import classes from './layout.module.css';
 
 import { ThemeSelector } from './ThemeSelector';
+import { AlertsIcon } from '../pages/Alerts';
 import { GiHelp } from "react-icons/gi";
 import Footer from './Footer'
 function Layout() {
-	
-
-
-
 	return (
 		<>
 			<div className={classes.wrapper}>
