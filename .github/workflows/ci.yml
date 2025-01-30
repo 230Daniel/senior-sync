@@ -2,13 +2,43 @@ name: ci
 
 on:
   push:
-    branches: [ "main" ]
     commit-ignore:
     - [skip ci]
     - [ci skip]
   workflow_dispatch:
 
+env:
+  DO_PUSH: ${{ github.ref == 'refs/heads/main' }}
+
 jobs:
+
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+    -
+      name: Set up python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12.x
+        cache: pip
+    - 
+      name: Install dependencies
+      run: python -m pip install -r backend/requirements.txt && python -m pip install -r backend/tests/requirements.txt
+    -
+      name: Run tests
+      run: cd backend && pytest
+    -
+      name: Coverage
+      run: cd backend && coverage run --include=app/** -m pytest; coverage html
+    -
+      name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage
+        path: backend/htmlcov/*
 
   build-backend:
     runs-on: ubuntu-latest
@@ -31,9 +61,11 @@ jobs:
       with:
         context: ./backend
         file: ./backend/Dockerfile
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
         tags: 230daniel/private:senior-sync-backend
-        push: true
+        push: ${{ env.DO_PUSH }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -56,6 +88,8 @@ jobs:
       with:
         context: ./frontend
         file: ./frontend/Dockerfile
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
         tags: 230daniel/private:senior-sync-frontend
-        push: true
+        push: ${{ env.DO_PUSH }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
