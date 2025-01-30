@@ -27,7 +27,7 @@ async def record(sensor_id: str, data_point: CreateDataPoint = Body(), db: Datab
 
     try:
         data_point_type = DataPointModels[sensor.value_type]
-        if not issubclass(data_point_type, ColourDataPoint):
+        if type(data_point.value) == str:
             data_point = data_point_type(
             value=data_point.value,
             timestamp=data_point.timestamp,

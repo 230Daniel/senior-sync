@@ -29,7 +29,7 @@ TEST_HEART_RATE_SENSOR = {
     ]
 }
 
-TEST_STR_SENSOR = {
+TEST_STRING_SENSOR = {
     "_id": "test_str_sensor",
     "friendly_name": "Test String Sensor",
     "unit": "passes",
@@ -73,5 +73,32 @@ TEST_HEART_RATE_DATAPOINTS = [
         "timestamp": datetime(2025, 1, 6),
         "value": -18,
         "colour": "red"
+    }
+]
+
+TEST_STRING_DATAPOINTS = [
+    {
+        "_id": 1,
+        "timestamp": datetime(2025, 1, 1),
+        "value": "silent but deadly",
+        "colour": None
+    },
+    {
+        "_id": 2,
+        "timestamp": datetime(2025, 1, 2),
+        "value": "oh god",
+        "colour": None
+    },
+    {
+        "_id": 3,
+        "timestamp": datetime(2025, 1, 3),
+        "value": "my eyes",
+        "colour": None
+    },
+    {
+        "_id": 4,
+        "timestamp": datetime(2025, 1, 4),
+        "value": "surprisingly tame",
+        "colour": None
     }
 ]

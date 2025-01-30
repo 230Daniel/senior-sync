@@ -6,7 +6,7 @@ import pytest
 from app.main import app
 from app.database import get_db, Database
 
-from .constants import TEST_HEART_RATE_DATAPOINTS, TEST_HEART_RATE_SENSOR, TEST_STR_SENSOR
+from .constants import TEST_HEART_RATE_DATAPOINTS, TEST_HEART_RATE_SENSOR, TEST_STRING_SENSOR
 
 @pytest.fixture(scope="function")
 def test_client():
@@ -37,7 +37,7 @@ def test_sensors(test_db: Database):
     """
     sensors = [
         TEST_HEART_RATE_SENSOR,
-        TEST_STR_SENSOR
+        TEST_STRING_SENSOR
     ]
 
     test_db.sensors.insert_many(sensors)
@@ -51,6 +51,12 @@ def test_sensors(test_db: Database):
 @pytest.fixture(scope="function")
 def test_heart_rate_sensor(test_sensors):
     yield TEST_HEART_RATE_SENSOR
+
+
+@pytest.fixture(scope="function")
+def test_string_sensor(test_sensors):
+    yield TEST_STRING_SENSOR
+
 
 @pytest.fixture(scope="function")
 def test_heart_rate_datapoints(test_db: Database, test_heart_rate_sensor):
