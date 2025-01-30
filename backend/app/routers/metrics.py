@@ -10,14 +10,13 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 import pandas as pd
 
-from ..services.alert_generator import AlertGenerator
+from ..services.alert_generator import AlertGenerator, get_alert_generator
 
 from ..database import Database, get_db
-from ..models.datapoint import CreateDataPoint, DataPoint, ColourDataPoint, DataPointModels
+from ..models.datapoint import CreateDataPoint, DataPoint, DataPointModels
 from ..models.sensor import SensorWithDatapoint
 
 router = APIRouter()
-alert_generator = AlertGenerator()
 
 @router.post(
     "/{sensor_id}",
@@ -28,7 +27,8 @@ async def record(
     background_tasks: BackgroundTasks,
     sensor_id: str,
     data_point: CreateDataPoint = Body(),
-    db: Database = Depends(get_db)):
+    db: Database = Depends(get_db),
+    alert_generator: AlertGenerator = Depends(get_alert_generator)):
 
     if not (sensor := db.get_sensor(sensor_id)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")

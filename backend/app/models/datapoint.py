@@ -1,6 +1,5 @@
-from datetime import datetime
 from typing import Dict, Type, Union
-from pydantic import BaseModel
+from pydantic import BaseModel, AwareDatetime
 from .enums import ColourStatus
 from typing import Optional
 
@@ -8,7 +7,7 @@ class CreateDataPoint(BaseModel):
     """
     Create a datapoint with timestamp and value only.
     """
-    timestamp: datetime
+    timestamp: AwareDatetime
     value: Union[int, float, str]
 
 class DataPoint(CreateDataPoint):
