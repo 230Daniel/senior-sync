@@ -43,7 +43,7 @@ These steps will start the backend up locally so that you can interact with it o
 
 4. Activate your virtual environment with `.\venv\Scripts\activate`.
 
-5. Install packages with `pip install -r requirements.txt`. If you get an error about Microsoft Visual C++ not being installed, follow the steps in this answer: https://stackoverflow.com/a/64262038.
+5. Install packages with `python -m pip install -r requirements.txt`. If you get an error about Microsoft Visual C++ not being installed, follow the steps in this answer: https://stackoverflow.com/a/64262038.
 
 6. Run `fastapi dev` to start up the backend on http://127.0.0.1:8000.
 
@@ -65,6 +65,28 @@ For a youtube tutorial on the following instructions please watch https://www.yo
 
 7. Optional, install the VS code mongodb extension. Open VS code, go to extensions, search for MongoDB for VS code, install.
 
+
+## Unit testing backend
+
+The unit tests live in the `backend/tests` folder, and are written with Pytest. They use a mock MongoDB so you don't need a database to run them.
+
+### Run tests
+
+1. Install the `backend/tests/requirements.txt` requirements file with pip.
+
+2. Cd into the `backend` folder.
+
+3. Run `pytest` to run the tests.
+
+### Coverage report
+
+The coverage report shows which code paths have or haven't been tested.
+
+1. Cd into the `backend` folder.
+
+2. Run `coverage run --include=app/** -m pytest; coverage html` to generate the report.
+
+3. Open `backend/htmlcov/index.html` in your browser to view the interactive report.
 
 # Production Deployment (Linux only)
 
