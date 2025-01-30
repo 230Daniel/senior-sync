@@ -45,6 +45,23 @@ def test_add_string_datapoint(test_client: TestClient, test_db: Database, test_s
         "_id": ANY
     }
 
+@pytest.mark.parametrize("test_datapoint", TEST_HEART_RATE_DATAPOINTS)
+def test_add_numerical_string_datapoint(test_client: TestClient, test_db: Database, test_heart_rate_sensor: Dict, test_datapoint: Dict):
+    sensor_id = test_heart_rate_sensor['_id']
+
+    response = test_client.post(f"/api/metrics/{sensor_id}", json={
+        "timestamp": test_datapoint["timestamp"].isoformat(),
+        "value": str(test_datapoint["value"])
+    })
+    assert response.status_code == 201
+
+    data_points = list(test_db[f"sensor-datapoints-{sensor_id}"].find({}))
+
+    assert len(data_points) == 1
+    assert data_points[0] == test_datapoint | {
+        "_id": ANY
+    }
+
 def test_add_datapoint_wrong_type_422(test_client: TestClient, test_heart_rate_sensor: Dict):
     sensor_id = test_heart_rate_sensor['_id']
 
