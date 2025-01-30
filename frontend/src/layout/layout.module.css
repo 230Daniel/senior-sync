@@ -75,7 +75,7 @@
     }
 }
 
-Footer {
+.footer {
   color: unset;
   background-color: var(--theme-col-nav);
   box-shadow: 0 5px 10px var(--theme-col-shadow);

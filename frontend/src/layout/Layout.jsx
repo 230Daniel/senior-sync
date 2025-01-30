@@ -35,12 +35,11 @@ function Layout() {
 					</div>
 				</main>
 			</div>
-				<footer>
-					<div className={classes.footer}>
+				<div className={classes.footer}>
 					<Footer /> 
 					</div>
 					
-				</footer>
+				
 				
 			
 			
