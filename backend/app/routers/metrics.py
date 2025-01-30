@@ -110,3 +110,33 @@ async def get_export(sensor_id: str, db: Database = Depends(get_db)) -> Streamin
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=Export_{sensor_id}.csv"}
 )
+
+
+@router.post(
+    "/{sensor_id}/mass",
+    summary="Records mass test data import.",
+    status_code=status.HTTP_201_CREATED,
+)
+async def mass_import(sensor_id: str, data_points: List[CreateDataPoint] = Body(), db: Database = Depends(get_db)):
+
+    if not (sensor := db.get_sensor(sensor_id)):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Sensor {sensor_id} not found.")
+
+    try:
+        # Convert to the appropriate DataPointModel type for this sensor.
+        data_points = [
+            DataPointModels[sensor.value_type](
+                value=data_point.value,
+                timestamp=data_point.timestamp
+            )
+            for data_point in data_points
+        ]
+    except ValidationError as exc:
+        raise RequestValidationError(exc.errors())
+
+    db.add_mass_data(sensor.id, data_points)
+
+    return Response(status_code=status.HTTP_201_CREATED)
+
+
+

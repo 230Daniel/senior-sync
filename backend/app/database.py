@@ -58,6 +58,13 @@ class Database:
             for result in results
         ]
 
+    def add_mass_data(self, sensor_id: str, datapoints: List[DataPoint]):
+        collection = self.get_datapoints_collection(sensor_id)
+        collection.insert_many([
+            data_point.model_dump(by_alias=True)
+            for data_point in datapoints
+        ])
+
 def get_db():
     with pymongo.MongoClient(os.environ["MONGO_HOST"]) as client:
         yield Database(client)
