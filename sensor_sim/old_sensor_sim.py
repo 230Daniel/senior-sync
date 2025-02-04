@@ -4,6 +4,7 @@ import time
 import keyboard
 import requests
 
+
 def main():
     print("\nStarting Health Simulator\n")
     mode = "normal"
@@ -42,10 +43,10 @@ def main():
 
     try:
         response = requests.post(api_post_sensor_endpoint, json={
-  "_id": id,
-  "friendly_name": friendly_name,
-  "unit": unit,
-  "value_type": value_type
+"_id": id,
+"friendly_name": friendly_name,
+"unit": unit,
+"value_type": value_type
 })
         response.raise_for_status()
     except:
