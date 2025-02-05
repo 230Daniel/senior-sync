@@ -87,17 +87,20 @@ class Database:
             for result in self.alerts.find({"sensor_id": sensor_id, "is_active": True}).sort({"timestamp": -1})
         ]
 
-    def delete_sensor_datapoints(self, sensor_id):
-        pass
+    def delete_sensor_datapoints(self, sensor_id: str):
+        collection = self.get_datapoints_collection(sensor_id)
+        collection.drop()
 
     def delete_all_datapoints(self):
-        pass
+        sensors = self.get_sensors()
+        for sensor in sensors:
+            self.delete_sensor_datapoints(sensor._id)
 
-    def delete_sensor(self, sensor_id):
-        pass
+    def delete_sensor(self, sensor_id: str):
+        self.sensors.delete_one({"_id": sensor_id})
 
     def delete_all_sensors(self):
-        pass
+        self.sensors.delete_many({})
 
 def get_db():
     with pymongo.MongoClient(os.environ["MONGO_HOST"]) as client:
