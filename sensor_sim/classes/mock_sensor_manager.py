@@ -4,11 +4,16 @@ from .models.sensor import ColourStatusBoundary
 from .models.limits import Limits
 from typing import List, Optional
 import traceback
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_URL = os.getenv("API_URL")
 
 class MockSensorManager:
     def __init__(self):
         self.sensors = []
-        self.post_sensor_endpoint = f"http://localhost:8000/api/sensors"
+        self.post_sensor_endpoint = f"{API_URL}/api/sensors"
 
     def add_sensor(self, id: str, friendly_name: str, unit: str, value_type: int, colour_status_boundaries: Optional[List[ColourStatusBoundary]], normal_limits: Limits, dangerous_limits: Limits, deadly_limits: Limits):
         """Add a new sensor to the manager."""

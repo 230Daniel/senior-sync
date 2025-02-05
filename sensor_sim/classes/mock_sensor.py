@@ -7,6 +7,11 @@ from .models.limits import Limits, StringLimit
 import requests
 from datetime import datetime
 import traceback
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_URL = os.getenv("API_URL")
 
 
 class MockSensor:
@@ -16,7 +21,7 @@ class MockSensor:
         self.friendly_name = sensor_data["friendly_name"]
         self.unit = sensor_data["unit"]
         self.value_type = sensor_data["value_type"]
-        self.post_data_endpoint = f"http://localhost:8000/api/metrics/{self.id}"
+        self.post_data_endpoint = f"{API_URL}/api/metrics/{self.id}"
         self.running = False
         if "colour_status_boundaries" in sensor_data:
             self.boundaries = sensor_data["colour_status_boundaries"]
