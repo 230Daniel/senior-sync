@@ -17,7 +17,8 @@ class MockSensor:
         self.value_type = sensor_data["value_type"]
         self.post_data_endpoint = f"http://localhost:8000/api/metrics/{self.id}"
         self.running = False
-        self.boundaries = sensor_data["colour_status_boundaries"]
+        if "colour_status_boundaries" in sensor_data:
+            self.boundaries = sensor_data["colour_status_boundaries"]
         self.normal_limits = normal_limits
         self.dangerous_limits = dangerous_limits
         self.deadly_limits = deadly_limits
