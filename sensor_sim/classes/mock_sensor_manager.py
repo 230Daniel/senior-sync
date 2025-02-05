@@ -3,6 +3,7 @@ from .mock_sensor import MockSensor
 from .models.sensor import ColourStatusBoundary
 from .models.limits import Limits
 from typing import List, Optional
+import traceback
 
 class MockSensorManager:
     def __init__(self):
@@ -54,8 +55,12 @@ class MockSensorManager:
         for sensor in self.sensors:
             if str(sensor.id) == id:
                 sensor_index = self.sensors.index(sensor)
-            else:
-                pass
-        self.sensors[sensor_index].mode = mode
+        try:
+            self.sensors[sensor_index].mode = mode
+        except TypeError:
+            print(f'''TypeError: {traceback.format_exc()}
+Sensor id given was not in managers list of sensors''')
+
+
 
 

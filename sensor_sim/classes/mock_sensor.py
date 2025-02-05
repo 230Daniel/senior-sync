@@ -6,6 +6,7 @@ from typing import Union
 from .models.limits import Limits, StringLimit
 import requests
 from datetime import datetime
+import traceback
 
 
 class MockSensor:
@@ -64,4 +65,4 @@ class MockSensor:
                 response.raise_for_status()
                 time.sleep(1)
             except requests.exceptions.HTTPError:
-                print("HTTP ERROR")
+                print(f"HTTP ERROR: {traceback.format_exc()}")

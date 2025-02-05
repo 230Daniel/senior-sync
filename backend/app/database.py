@@ -86,6 +86,18 @@ class Database:
             DatabaseAlert(**result)
             for result in self.alerts.find({"sensor_id": sensor_id, "is_active": True}).sort({"timestamp": -1})
         ]
+    
+    def delete_sensor_datapoints(self, sensor_id):
+        pass
+
+    def delete_all_datapoints(self):
+        pass
+
+    def delete_sensor(self, sensor_id):
+        pass
+
+    def delete_all_sensors(self):
+        pass
 
 def get_db():
     with pymongo.MongoClient(os.environ["MONGO_HOST"]) as client:
