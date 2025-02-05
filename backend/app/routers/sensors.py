@@ -30,3 +30,11 @@ async def add_sensor(sensor: Sensor = Body(), db: Database = Depends(get_db)) ->
         )
 
     return Response(status_code=status.HTTP_201_CREATED)
+
+@router.delete("/{sensor_id}", summary="Deletes a registered sensor.", status_code=status.HTTP_201_CREATED)
+async def delete_sensor(sensor_id: str, db: Database = Depends(get_db)) -> None:
+    db.delete_sensor(sensor_id)
+
+@router.delete("", summary="Deletes all registered sensors.", status_code=status.HTTP_201_CREATED)
+async def delete_all_sensors(db: Database = Depends(get_db)) -> None:
+    db.delete_all_sensors()
