@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 from .mock_sensor_manager import MockSensorManager
 
 class SensorSimUI:
@@ -23,6 +24,17 @@ class SensorSimUI:
         # self.window_height = self.root.winfo_reqheight() + 20  # Add vertical padding
         # self.root.geometry(f"{700}x{500}")
         self.root.resizable(False, False)
+        self.threshold_frame = None
+        self.colour_status_boundaries = []
+        self.normal_value_entry = None
+        self.dangerous_value_entry = None
+        self.deadly_value_entry = None
+        self.normal_limits_min_entry = None
+        self.normal_limits_max_entry = None
+        self.dangerous_limits_min_entry = None
+        self.dangerous_limits_max_entry = None
+        self.deadly_limits_min_entry = None
+        self.deadly_limits_max_entry = None
 
         # Header
         self.header_frame = ctk.CTkFrame(root)
@@ -86,7 +98,7 @@ class SensorSimUI:
     def add_sensor(self):
         """Adds a new sensor row to the UI."""
 
-        colour_status_boundaries = []
+        self.colour_status_boundaries = []
 
         popup = ctk.CTkToplevel()
         popup.title("Add New Sensor")
@@ -105,70 +117,112 @@ class SensorSimUI:
         ctk.CTkLabel(popup, text="Unit:").grid(row=2, column=0, padx=10, pady=5, sticky="e")
         unit_entry = ctk.CTkEntry(popup)
         unit_entry.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
+        
+        def show_input_menu_type(value_type):
+            limits_frame = ctk.CTkFrame(popup)
+            limits_frame.grid(row=5, column=0, columnspan=2, padx=10, pady=5, sticky="ew")
+            limits_frame.columnconfigure(1, weight=1)
+
+            if value_type == "int" or value_type == "float":
+                def add_threshold():
+                    colour_status_boundary = {
+                        "threshold": threshold_entry.get(),
+                        "colour": colour_menu.get()
+                    }
+                    self.colour_status_boundaries.append(colour_status_boundary)
+
+                self.threshold_frame = ctk.CTkFrame(popup)
+                self.threshold_frame.grid(row=4, column=0, columnspan=2, padx=10, pady=5, sticky="ew")
+                self.threshold_frame.columnconfigure(1, weight=1)
+
+                ctk.CTkLabel(self.threshold_frame, text="Threshold:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                threshold_entry = ctk.CTkEntry(self.threshold_frame)
+                threshold_entry.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
+
+                ctk.CTkLabel(self.threshold_frame, text="Colour:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                colour_menu = ctk.CTkOptionMenu(self.threshold_frame, values=["red", "amber", "green"])
+                colour_menu.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
+
+                add_threshold_button = ctk.CTkButton(self.threshold_frame, text="Add Threshold", command=add_threshold)
+                add_threshold_button.grid(row=2, column=1, padx=5, pady=5)
+
+                ctk.CTkLabel(limits_frame, text="Normal Limits").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                ctk.CTkLabel(limits_frame, text="Min:").grid(row=0, column=1, padx=10, pady=5, sticky="e")
+                self.normal_limits_min_entry = ctk.CTkEntry(limits_frame)
+                self.normal_limits_min_entry.grid(row=0, column=2, padx=10, pady=5, sticky="ew")
+                ctk.CTkLabel(limits_frame, text="Max:").grid(row=0, column=3, padx=10, pady=5, sticky="e")
+                self.normal_limits_max_entry = ctk.CTkEntry(limits_frame)
+                self.normal_limits_max_entry.grid(row=0, column=4, padx=10, pady=5, sticky="ew")
+
+                ctk.CTkLabel(limits_frame, text="Dangerous Limits").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                ctk.CTkLabel(limits_frame, text="Min:").grid(row=1, column=1, padx=10, pady=5, sticky="e")
+                self.dangerous_limits_min_entry = ctk.CTkEntry(limits_frame)
+                self.dangerous_limits_min_entry.grid(row=1, column=2, padx=10, pady=5, sticky="ew")
+                ctk.CTkLabel(limits_frame, text="Max:").grid(row=1, column=3, padx=10, pady=5, sticky="e")
+                self.dangerous_limits_max_entry = ctk.CTkEntry(limits_frame)
+                self.dangerous_limits_max_entry.grid(row=1, column=4, padx=10, pady=5, sticky="ew")
+
+                ctk.CTkLabel(limits_frame, text="Deadly Limits").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                ctk.CTkLabel(limits_frame, text="Min:").grid(row=2, column=1, padx=10, pady=5, sticky="e")
+                self.deadly_limits_min_entry = ctk.CTkEntry(limits_frame)
+                self.deadly_limits_min_entry.grid(row=2, column=2, padx=10, pady=5, sticky="ew")
+                ctk.CTkLabel(limits_frame, text="Max:").grid(row=2, column=3, padx=10, pady=5, sticky="e")
+                self.deadly_limits_max_entry = ctk.CTkEntry(limits_frame)
+                self.deadly_limits_max_entry.grid(row=2, column=4, padx=10, pady=5, sticky="ew")
+
+            if value_type == "str":
+                try:
+                    self.threshold_frame.grid_forget()
+                except:
+                    print("cant remove threshold frame. doesn;'t exist")
+                    pass
+
+                ctk.CTkLabel(limits_frame, text="Normal Value").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                self.normal_value_entry = ctk.CTkEntry(limits_frame)
+                self.normal_value_entry.grid(row=0, column=2, padx=10, pady=5, sticky="ew")
+
+                ctk.CTkLabel(limits_frame, text="Dangerous Value").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                self.dangerous_value_entry = ctk.CTkEntry(limits_frame)
+                self.dangerous_value_entry.grid(row=1, column=2, padx=10, pady=5, sticky="ew")
+
+                ctk.CTkLabel(limits_frame, text="Deadly Value").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                self.deadly_value_entry = ctk.CTkEntry(limits_frame)
+                self.deadly_value_entry.grid(row=2, column=2, padx=10, pady=5, sticky="ew")
 
         ctk.CTkLabel(popup, text="Value Type:").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-        value_type_menu = ctk.CTkOptionMenu(popup, values=["int", "float", "str"])
+        value_type_menu = ctk.CTkOptionMenu(popup, values=["int", "float", "str"], command=show_input_menu_type)
         value_type_menu.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
 
-        threshold_frame = ctk.CTkFrame(popup)
-        threshold_frame.grid(row=4, column=0, columnspan=2, padx=10, pady=5, sticky="ew")
-        threshold_frame.columnconfigure(1, weight=1)
+        def submit():           
+            # Check if colour status boundaries are included for all sensors of type int and float.
+            if value_type_menu.get() != "str" and self.colour_status_boundaries == []:
+                CTkMessagebox(title="Warning", message="Colour status boundaries must be included for all sensors of type int or float", icon="warning")
+                return
 
-        ctk.CTkLabel(threshold_frame, text="Threshold:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-        threshold_entry = ctk.CTkEntry(threshold_frame)
-        threshold_entry.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
+            # Clear any colour status boundaries if str sensor is chosen
+            if value_type_menu.get() == "str":
+                self.colour_status_boundaries = []
+                normal_limits = self.normal_value_entry.get()
+                dangerous_limits = self.dangerous_value_entry.get()
+                deadly_limits = self.deadly_value_entry.get()
 
-        ctk.CTkLabel(threshold_frame, text="Colour:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-        colour_menu = ctk.CTkOptionMenu(threshold_frame, values=["red", "amber", "green"])
-        colour_menu.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
+            elif value_type_menu.get() == "int" or value_type_menu.get() == "float":
+                print("normal limits min entry", self.normal_limits_min_entry.get())
+                normal_limits={"min": int(self.normal_limits_min_entry.get()),"max": int(self.normal_limits_max_entry.get())}
+                dangerous_limits={"min": int(self.dangerous_limits_min_entry.get()),"max": int(self.dangerous_limits_max_entry.get())}
+                deadly_limits={"min": int(self.deadly_limits_min_entry.get()),"max": int(self.deadly_limits_max_entry.get())}
 
-        limits_frame = ctk.CTkFrame(popup)
-        limits_frame.grid(row=5, column=0, columnspan=2, padx=10, pady=5, sticky="ew")
-        limits_frame.columnconfigure(1, weight=1)
-
-        ctk.CTkLabel(limits_frame, text="Normal Limits").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-        ctk.CTkLabel(limits_frame, text="Min:").grid(row=0, column=1, padx=10, pady=5, sticky="e")
-        normal_limits_min_entry = ctk.CTkEntry(limits_frame)
-        normal_limits_min_entry.grid(row=0, column=2, padx=10, pady=5, sticky="ew")
-        ctk.CTkLabel(limits_frame, text="Max:").grid(row=0, column=3, padx=10, pady=5, sticky="e")
-        normal_limits_max_entry = ctk.CTkEntry(limits_frame)
-        normal_limits_max_entry.grid(row=0, column=4, padx=10, pady=5, sticky="ew")
-
-        ctk.CTkLabel(limits_frame, text="Dangerous Limits").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-        ctk.CTkLabel(limits_frame, text="Min:").grid(row=1, column=1, padx=10, pady=5, sticky="e")
-        dangerous_limits_min_entry = ctk.CTkEntry(limits_frame)
-        dangerous_limits_min_entry.grid(row=1, column=2, padx=10, pady=5, sticky="ew")
-        ctk.CTkLabel(limits_frame, text="Max:").grid(row=1, column=3, padx=10, pady=5, sticky="e")
-        dangerous_limits_max_entry = ctk.CTkEntry(limits_frame)
-        dangerous_limits_max_entry.grid(row=1, column=4, padx=10, pady=5, sticky="ew")
-
-        ctk.CTkLabel(limits_frame, text="Deadly Limits").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-        ctk.CTkLabel(limits_frame, text="Min:").grid(row=2, column=1, padx=10, pady=5, sticky="e")
-        deadly_limits_min_entry = ctk.CTkEntry(limits_frame)
-        deadly_limits_min_entry.grid(row=2, column=2, padx=10, pady=5, sticky="ew")
-        ctk.CTkLabel(limits_frame, text="Max:").grid(row=2, column=3, padx=10, pady=5, sticky="e")
-        deadly_limits_max_entry = ctk.CTkEntry(limits_frame)
-        deadly_limits_max_entry.grid(row=2, column=4, padx=10, pady=5, sticky="ew")
-    
-        def add_threshold():
-            colour_status_boundary = {
-                "threshold": threshold_entry.get(),
-                "colour": colour_menu.get()
-            }
-            colour_status_boundaries.append(colour_status_boundary)
-
-        def submit():
             self.manager.add_sensor(id=sensor_id_entry.get(),
                                     friendly_name=friendly_name_entry.get(),
                                     unit=unit_entry.get(),
                                     value_type=value_type_menu.get(),
-                                    colour_status_boundaries= colour_status_boundaries,
-                                    normal_limits={"min": int(normal_limits_min_entry.get()),"max": int(normal_limits_max_entry.get())},
-                                    dangerous_limits={"min": int(dangerous_limits_min_entry.get()),"max": int(dangerous_limits_max_entry.get())},
-                                    deadly_limits={"min": int(deadly_limits_min_entry.get()),"max": int(deadly_limits_max_entry.get())})
+                                    colour_status_boundaries= self.colour_status_boundaries,
+                                    normal_limits=normal_limits,
+                                    dangerous_limits=dangerous_limits,
+                                    deadly_limits=deadly_limits)
 
             self.sensor_count += 1
-            colour_status_boundaries.clear()
+            self.colour_status_boundaries.clear()
 
             # Sensor name label
             sensor_label = ctk.CTkLabel(self.scrollable_frame, text=f"{friendly_name_entry.get()}", font=("Arial", 10))
@@ -190,10 +244,7 @@ class SensorSimUI:
 
             # Ensure the canvas updates its scrollregion
             self.sensor_canvas.update_idletasks()
-            # popup.destroy() # TODO: uncomment when done
-        
-        add_threshold_button = ctk.CTkButton(threshold_frame, text="Add Threshold", command=add_threshold)
-        add_threshold_button.grid(row=2, column=1, padx=5, pady=5)
+            # popup.destroy() # TODO: uncomment when finished testing
 
         add_sensor_button = ctk.CTkButton(popup, text="Add Sensor", command=submit)
         add_sensor_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
@@ -209,5 +260,4 @@ class SensorSimUI:
 
             # Refresh every second
             self.root.after(1000, self.update_sensor_values)
-
 

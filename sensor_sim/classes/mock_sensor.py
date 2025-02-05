@@ -2,14 +2,14 @@ import random
 import threading
 import time
 from .models.sensor import Sensor
-from typing import Optional, List
-from .models.limits import Limits
+from typing import Optional, List, Union
+from .models.limits import Limits, StringLimit
 import requests
 from datetime import datetime
 
 
 class MockSensor:
-    def __init__(self, sensor_data: Sensor, normal_limits: Limits, dangerous_limits: Limits, deadly_limits: Limits):
+    def __init__(self, sensor_data: Sensor, normal_limits: Union[Limits, StringLimit], dangerous_limits: Union[Limits, StringLimit], deadly_limits: Union[Limits, StringLimit]):
         self.mode = "normal"
         self.id = sensor_data["_id"]
         self.friendly_name = sensor_data["friendly_name"]
@@ -26,13 +26,22 @@ class MockSensor:
 
     def update_value(self):
         """Update the sensor value with a random integer."""
-        match self.mode:
-            case "normal":
-                self.value = random.randint(self.normal_limits["min"], self.normal_limits["max"])
-            case "dangerous":
-                self.value = random.randint(self.dangerous_limits["min"], self.dangerous_limits["max"])
-            case "deadly":
-                self.value = random.randint(self.deadly_limits["min"], self.deadly_limits["max"])
+        if isinstance(self.value_type, str):
+            match self.mode:
+                case "normal":
+                    self.value = self.normal_limits
+                case "dangerous":
+                    self.value = self.dangerous_limits
+                case "deadly":
+                    self.value = self.deadly_limits
+        else:
+            match self.mode:
+                case "normal":
+                    self.value = random.randint(self.normal_limits["min"], self.normal_limits["max"])
+                case "dangerous":
+                    self.value = random.randint(self.dangerous_limits["min"], self.dangerous_limits["max"])
+                case "deadly":
+                    self.value = random.randint(self.deadly_limits["min"], self.deadly_limits["max"])
 
     def start(self):
         """Start the sensor's periodic updates."""
