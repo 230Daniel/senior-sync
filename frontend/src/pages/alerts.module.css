@@ -1,0 +1,22 @@
+.alert {
+    display: flex;
+
+    flex-direction: column;
+    margin: 25px;
+    padding: 25px;
+
+    border-radius: 4px;
+    box-shadow: 10px 10px 5px var(--theme-col-shadow);
+    border: 1px solid var(--theme-col-status-red);
+    background-color: var(--theme-col-card);
+    text-decoration: none;
+    color: unset;
+
+    font-size: 1.5em;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.01);
+        color: unset;
+    }
+}

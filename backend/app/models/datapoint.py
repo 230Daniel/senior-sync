@@ -11,9 +11,27 @@ class CreateDataPoint(BaseModel):
     timestamp: datetime
     value: Union[int, float, str]
 
+class CreateIntDataPoint(CreateDataPoint):
+    """
+    Create an integer datapoint.
+    """
+    value: int
+
+class CreateFloatDataPoint(CreateDataPoint):
+    """
+    Create a float datapoint.
+    """
+    value: float
+
+class CreateStrDataPoint(CreateDataPoint):
+    """
+    Create a string datapoint.
+    """
+    value: str
+
 class DataPoint(CreateDataPoint):
     """
-    A full datapoint with timestamp, value, and colour.
+    A full datapoint with timestamp, value, and optional colour.
     """
     colour: Optional[ColourStatus] = None
 
@@ -23,27 +41,29 @@ class ColourDataPoint(DataPoint):
     """
     colour: ColourStatus
 
-class IntDataPointModel(ColourDataPoint):
+class IntDataPoint(CreateIntDataPoint, ColourDataPoint):
     """
     A datapoint which must have an integer value and colour.
     """
-    value: int
 
-class FloatDataPointModel(ColourDataPoint):
+class FloatDataPoint(CreateFloatDataPoint, ColourDataPoint):
     """
     A datapoint which must have a float value and colour.
     """
-    value: float
 
-class StrDataPointModel(DataPoint):
+class StrDataPoint(CreateStrDataPoint, DataPoint):
     """
     A datapoint which must have a string value.
     """
-    value: str
 
+CreateDataPointModels: Dict[str, Type] = {
+    "int": CreateIntDataPoint,
+    "float": CreateFloatDataPoint,
+    "str": CreateStrDataPoint,
+}
 
 DataPointModels: Dict[str, Type] = {
-    "int": IntDataPointModel,
-    "float": FloatDataPointModel,
-    "str": StrDataPointModel,
+    "int": IntDataPoint,
+    "float": FloatDataPoint,
+    "str": StrDataPoint,
 }
