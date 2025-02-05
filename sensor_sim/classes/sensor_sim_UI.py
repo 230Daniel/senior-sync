@@ -189,6 +189,10 @@ class SensorSimUI:
                 self.deadly_value_entry = ctk.CTkEntry(limits_frame)
                 self.deadly_value_entry.grid(row=2, column=2, padx=10, pady=5, sticky="ew")
 
+            self.root.update_idletasks()  # Update all widgets to calculate size
+            popup_height = popup.winfo_reqheight() + 20  # Add vertical padding
+            popup.geometry(f"600x{popup_height}")
+
         ctk.CTkLabel(popup, text="Value Type:").grid(row=3, column=0, padx=10, pady=5, sticky="e")
         value_type_menu = ctk.CTkOptionMenu(popup, values=["int", "float", "str"], command=show_input_menu_type)
         value_type_menu.grid(row=3, column=1, padx=10, pady=5, sticky="ew")

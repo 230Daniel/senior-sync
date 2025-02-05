@@ -26,7 +26,7 @@ class MockSensor:
 
     def update_value(self):
         """Update the sensor value with a random integer."""
-        if isinstance(self.value_type, str):
+        if self.value_type == "str":
             match self.mode:
                 case "normal":
                     self.value = self.normal_limits
