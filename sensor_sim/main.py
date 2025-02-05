@@ -4,6 +4,10 @@ import customtkinter as ctk
 
 
 if __name__ == "__main__":
-    root = ctk.CTk()
-    app = SensorSimUI(root)
-    root.mainloop()
+    try:
+        root = ctk.CTk()
+        app = SensorSimUI(root)
+        root.mainloop()
+    except KeyboardInterrupt:
+        print("goodbye")
+        root.destroy()

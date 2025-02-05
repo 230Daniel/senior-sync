@@ -174,7 +174,6 @@ class SensorSimUI:
                 try:
                     self.threshold_frame.grid_forget()
                 except:
-                    print("cant remove threshold frame. doesn;'t exist")
                     pass
 
                 ctk.CTkLabel(limits_frame, text="Normal Value").grid(row=0, column=0, padx=10, pady=5, sticky="e")
@@ -211,7 +210,6 @@ class SensorSimUI:
                 deadly_limits = self.deadly_value_entry.get()
 
             elif value_type_menu.get() == "int" or value_type_menu.get() == "float":
-                print("normal limits min entry", self.normal_limits_min_entry.get())
                 normal_limits={"min": int(self.normal_limits_min_entry.get()),"max": int(self.normal_limits_max_entry.get())}
                 dangerous_limits={"min": int(self.dangerous_limits_min_entry.get()),"max": int(self.dangerous_limits_max_entry.get())}
                 deadly_limits={"min": int(self.deadly_limits_min_entry.get()),"max": int(self.deadly_limits_max_entry.get())}
@@ -260,8 +258,9 @@ class SensorSimUI:
     def update_sensor_values(self):
             sensor_values = self.manager.get_sensor_values()
             for row, sensor in enumerate(sensor_values, start=1):
-                self.scrollable_frame.grid_slaves(row=row+1, column=1)[0].configure(text=f"{sensor["value"]}")
-
+                widgets = self.scrollable_frame.grid_slaves(row=row+1, column=1)
+                if widgets:
+                    widgets[0].configure(text=f"{sensor["value"]}")
             # Refresh every second
             self.root.after(1000, self.update_sensor_values)
 

@@ -29,7 +29,6 @@ class MockSensorManager:
         }
         if colour_status_boundaries != []:
             sensor_data["colour_status_boundaries"] = colour_status_boundaries
-            print("thresholds have been added")
 
         sensor = MockSensor(sensor_data, normal_limits, dangerous_limits, deadly_limits)
         self.sensors.append(sensor)
