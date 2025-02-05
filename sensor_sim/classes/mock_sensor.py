@@ -2,7 +2,7 @@ import random
 import threading
 import time
 from .models.sensor import Sensor
-from typing import Optional, List, Union
+from typing import Union
 from .models.limits import Limits, StringLimit
 import requests
 from datetime import datetime

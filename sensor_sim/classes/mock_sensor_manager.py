@@ -1,6 +1,3 @@
-from datetime import datetime
-import time
-import keyboard
 import requests
 from .mock_sensor import MockSensor
 from .models.sensor import ColourStatusBoundary
