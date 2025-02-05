@@ -94,7 +94,7 @@ class Database:
     def delete_all_datapoints_collections(self):
         sensors = self.get_sensors()
         for sensor in sensors:
-            self.delete_datapoints_collection(sensor._id)
+            self.delete_datapoints_collection(sensor.id)
 
     def delete_sensor(self, sensor_id: str):
         self.sensors.delete_one({"_id": sensor_id})
