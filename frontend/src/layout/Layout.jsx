@@ -23,10 +23,13 @@ function Layout() {
 							</svg>
 							Senior Sync
 						</NavLink>
-						<div className={classes.themeSelector}>
+						<div className={classes.icons}>
+							<AlertsIcon />
 							<ThemeSelector />
+							<NavLink to="/userguide" className={classes.helpIcon}>
+								<GiHelp title='Press for help' />
+							</NavLink>
 						</div>
-						<NavLink to="/UserGuide" className={classes.helpIcon}><GiHelp  title='Press for help'/></NavLink>
 					</div>
 				</header>
 				<main>
