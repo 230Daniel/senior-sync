@@ -17,7 +17,7 @@ function MetricCard({ metric }) {
 		<>
 			<NavLink to={`/metric/${metric._id}`} className={classes.card} style={{
 				// @ts-ignore
-				"--col-card-status": `var(--theme-col-status-${status})`
+				"--col-card-status": `var(--theme-col-status-${status || "default"})`
 			}}>
 				<span className={classes.metricName}>{metric.friendly_name}</span>
 				<div className={classes.cardRow}>
