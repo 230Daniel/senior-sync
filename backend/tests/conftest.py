@@ -2,6 +2,8 @@ import copy
 from fastapi.testclient import TestClient
 import mongomock
 import pytest
+from pydantic._internal._generate_schema import GenerateSchema
+from pydantic_core import core_schema
 
 from app.main import app
 from app.database import get_db, Database
@@ -27,6 +29,7 @@ def test_db():
             yield Database(client)
 
         def get_test_alert_generator():
+            AlertGenerator.clear()
             alert_generator = AlertGenerator(Database(client))
             yield alert_generator
 
@@ -44,27 +47,24 @@ def test_sensors(test_db: Database):
     """
     Fixture for tests that expect sensors to exist in the database already.
     """
-    sensors = [
+    sensors = copy.deepcopy([
         TEST_HEART_RATE_SENSOR,
         TEST_STRING_SENSOR
-    ]
+    ])
 
     test_db.sensors.insert_many(sensors)
 
     yield sensors
 
-    test_db.sensors.delete_many({ "_id": {
-        "$in": [[sensor["_id"] for sensor in sensors]]
-    }})
 
 @pytest.fixture(scope="function")
 def test_heart_rate_sensor(test_sensors):
-    yield TEST_HEART_RATE_SENSOR
+    yield copy.deepcopy(TEST_HEART_RATE_SENSOR)
 
 
 @pytest.fixture(scope="function")
 def test_string_sensor(test_sensors):
-    yield TEST_STRING_SENSOR
+    yield copy.deepcopy(TEST_STRING_SENSOR)
 
 
 @pytest.fixture(scope="function")
@@ -79,6 +79,11 @@ def test_heart_rate_datapoints(test_db: Database, test_heart_rate_sensor):
         for data_point in copy.deepcopy(TEST_HEART_RATE_DATAPOINTS)
     ]
 
-    test_db.sensors.delete_many({ "_id": {
-        "$in": [[datapoint["_id"] for datapoint in TEST_HEART_RATE_DATAPOINTS]]
-    }})
+
+# Fix for PydanticSchemaGenerationError when using Freezegun
+initial_match_type = GenerateSchema.match_type
+def match_type(self, obj):
+    if getattr(obj, "__name__", None) == "datetime":
+        return core_schema.datetime_schema()
+    return initial_match_type(self, obj)
+GenerateSchema.match_type = match_type
