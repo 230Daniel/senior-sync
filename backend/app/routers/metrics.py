@@ -150,3 +150,11 @@ async def mass_import(sensor_id: str, data_points: List[CreateDataPoint] = Body(
     db.add_mass_data(sensor.id, data_points)
 
     return Response(status_code=status.HTTP_201_CREATED)
+
+@router.delete("/{sensor_id}", summary="Deletes a sensor's collection of datapoints.")
+async def delete_datapoints_collection(sensor_id: str, db: Database = Depends(get_db)):
+    db.delete_datapoints_collection(sensor_id)
+
+@router.delete("", summary="Deletes all sensors' collection of datapoints.")
+async def delete_all_datapoints_collections(db: Database = Depends(get_db)):
+    db.delete_all_datapoints_collections()
