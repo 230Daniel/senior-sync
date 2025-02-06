@@ -14,7 +14,7 @@ for sensor_type in ["HKQuantityTypeIdentifierOxygenSaturation",
     for record in records:
         if record["startDate"] > "2015" and record["type"] == sensor_type:
             datapoint={
-                "value":float(record["value"]) * 100, 
+                "value":float(record["value"]), 
                 "timestamp":datetime.strptime(record["startDate"],"%Y-%m-%d %H:%M:%S %z").isoformat()
             }
             datapoints.append(datapoint)
