@@ -6,6 +6,7 @@
 	--theme-col-status-amber: #ac8300;
 	--theme-col-status-red: #e41e4f;
 	--theme-col-status-gray: #575757;
+	--theme-col-status-default: #499baf;
 	--theme-col-status-contrast: #fff;
 
 	--theme-hint-opacity: 0.5;
@@ -61,6 +62,7 @@
 	--theme-col-status-amber: #ffc400;
 	--theme-col-status-red: #ff0040;
 	--theme-col-status-gray: #d4d4d4;
+	--theme-col-status-default: #00d9ff;
 	--theme-col-status-contrast: #000;
 
 	--theme-col-chart-axis: #ffffff;
