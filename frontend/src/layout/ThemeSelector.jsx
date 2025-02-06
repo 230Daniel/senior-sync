@@ -37,7 +37,7 @@ export function ThemeProvider({ children }) {
 
 	// Effect to set themeIndex cookie whenever themeIndex state changes.
 	useEffect(() => {
-		setCookie("themeIndex", themeIndex, { expires: new Date("9999-01-01") });
+		setCookie("themeIndex", themeIndex, { expires: new Date("9999-01-01"), path: "/" });
 	}, [themeIndex]);
 
 	return <>
