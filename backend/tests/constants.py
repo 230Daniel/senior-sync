@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 TEST_HEART_RATE_SENSOR = {
     "_id": "heart_rate",
     "friendly_name": "Heart Rate",
-    "unit": "passes",
+    "unit": "BPM",
     "value_type": "int",
     "colour_status_boundaries": [
         {
@@ -104,3 +104,25 @@ TEST_STRING_DATAPOINTS = [
         "colour": None
     }
 ]
+
+TEST_ALERTS = [
+    {
+        "sensor_id": "test_active_sensor",
+        "timestamp": datetime(2025, 1, 1),
+        "is_active": True,
+        "message": "Test active alert message"
+    },
+    {
+        "sensor_id": "test_inactive_sensor",
+        "timestamp": datetime(2025, 1, 1) - timedelta(hours=1),
+        "is_active": False,
+        "message": "Test active non-active message"
+    }
+]
+
+HEART_RATE_ALERT = {
+    'sensor_id': 'heart_rate',
+    'timestamp': datetime(2025, 1, 1, 0, 0),
+    'is_active': True,
+    'message': 'The Heart Rate sensor detected a dangerous value of 0 BPM.'
+}

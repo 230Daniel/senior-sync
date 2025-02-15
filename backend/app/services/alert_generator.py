@@ -21,7 +21,7 @@ class AlertGenerator(metaclass=Singleton):
     def __init__(self, db):
         self.logger = logging.getLogger(__name__)
         self.email_sender = EmailSender.create_email_sender()
-        self.db = db
+        self.db: Database = db
 
     @synchronized
     def on_sensor_updated(self, sensor: Sensor, data_point: DataPoint):
@@ -29,7 +29,6 @@ class AlertGenerator(metaclass=Singleton):
             if data_point.colour == "green":
                 self.deactivate_alert(recent_alert)
             return
-        
         timestamp = data_point.timestamp if data_point.timestamp.tzinfo else pytz.utc.localize(data_point.timestamp)
 
         if data_point.colour == "red" and timestamp > datetime.now(timezone.utc) - timedelta(minutes=1):
