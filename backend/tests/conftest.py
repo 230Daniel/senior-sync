@@ -4,6 +4,7 @@ import mongomock
 import pytest
 from pydantic._internal._generate_schema import GenerateSchema
 from pydantic_core import core_schema
+from botocore.exceptions import ClientError
 
 from app.main import app
 from app.database import get_db, Database
@@ -20,7 +21,14 @@ def test_client():
         yield test_client
 
 @pytest.fixture(scope="function")
-def test_db():
+def mock_boto3(mocker):
+    """
+    Fixture to force boto3 client invocations to raise an error.
+    """
+    mocker.patch("boto3.client", side_effect=ClientError({}, "UnitTest"))
+
+@pytest.fixture(scope="function")
+def test_db(mock_boto3):
     """
     Fixture for tests that need a mocked MongoDB connection.
     """

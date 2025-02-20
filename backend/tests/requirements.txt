@@ -4,3 +4,4 @@ mongomock
 coverage
 pytest-timeout
 freezegun
+pytest-mock
